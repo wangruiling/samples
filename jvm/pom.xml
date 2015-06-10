@@ -6,20 +6,18 @@
 
     <parent>
         <groupId>org.wrl</groupId>
-        <artifactId>google</artifactId>
+        <artifactId>samples-project</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>guice</artifactId>
+    <artifactId>jvm</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-            <version>4.0</version>
-            <classifier>no_aop</classifier>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+            <version>3.1</version>
         </dependency>
     </dependencies>
-    
 </project>
