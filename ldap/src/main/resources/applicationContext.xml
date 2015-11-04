@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--LDAP start -->
+    <bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate" >
+        <property name="contextSource" ref="contextSourceTarget" />
+    </bean>
+
+    <bean id="contextSource" class="org.springframework.ldap.pool.factory.PoolingContextSource">
+        <property name="contextSource" ref="contextSourceTarget" />
+        <!--<property name="dirContextValidator" ref="dirContextValidator" />-->
+        <!--<property name="testOnBorrow" value="false" />-->
+        <!--<property name="testOnReturn" value="true" />-->
+        <!--<property name="testWhileIdle" value="false" />-->
+        <!--<property name="maxActive" value="8" />-->
+        <!--<property name="maxTotal" value="40" />-->
+        <!--<property name="maxIdle" value="8" />-->
+    </bean>
+
+    <bean id="contextSourceTarget" class="org.springframework.ldap.core.support.LdapContextSource">
+        <property name="url" value="ldap://172.16.3.11:389/" />
+        <property name="base" value="DC=corp,DC=homelink,DC=com,DC=cn" />
+        <property name="userDn" value="test01" />
+        <property name="password" value="homelink123" />
+        <property name="referral" value="follow" />
+        <!--pooled参数设为false，使用PoolingContextsource保证的ContextSource-->
+        <property name="pooled" value="false" />
+    </bean>
+
+    <bean id="dirContextValidator" class="org.springframework.ldap.pool.validation.DefaultDirContextValidator">
+        <!--<property name="base" value=""/>-->
+        <!--<property name="filter" value="objectclass=person" />-->
+        <!--<property name="searchControls">-->
+            <!--<bean class="javax.naming.directory.SearchControls">-->
+                <!--<property name="timeLimit" value="1000" />-->
+                <!--<property name="countLimit" value="1" />-->
+                <!--<property name="searchScope" value="0" />-->
+                <!--<property name="returningAttributes" value="" />-->
+            <!--</bean>-->
+        <!--</property>-->
+    </bean>
+    <!--LDAP end -->
+
+    <!--<bean id="ldapContact" class="com.homelink.homeshow.module.mvc.ldap.LadpTest">-->
+        <!--<property name="ldapTemplate">-->
+            <!--<ref bean="ldapTemplate" />-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!--<bean id="ladpHandler" class="com.homelink.homeshow.module.mvc.ldap.LadpHandler">-->
+        <!--<property name="ldapTemplate">-->
+            <!--<ref bean="ldapTemplate" />-->
+        <!--</property>-->
+    <!--</bean>-->
+
+</beans>
