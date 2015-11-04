@@ -27,7 +27,8 @@
 	<modules>
 		<module>google</module>
 		<module>jvm</module>
-  	</modules>
+		<module>utils</module>
+	</modules>
 
     <issueManagement>
         <system>Github</system>
