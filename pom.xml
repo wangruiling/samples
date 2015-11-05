@@ -28,6 +28,8 @@
 		<module>google</module>
 		<module>jvm</module>
 		<module>utils</module>
+		<module>spring</module>
+		<module>ldap</module>
 	</modules>
 
     <issueManagement>
