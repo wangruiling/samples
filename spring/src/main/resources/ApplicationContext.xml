@@ -3,5 +3,19 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-       <bean id="hello" class="org.wrl.spring.spring3.HelloImpl"/>
+       <bean id="hello" name="hello1,jkk" class="org.wrl.spring.spring3.HelloImpl"/>
+       <bean class="org.wrl.spring.spring3.HelloImpl">
+              <property name="values">
+                     <list>
+                            <value>1</value>
+                            <value>2</value>
+                            <value>3</value>
+                     </list>
+              </property>
+              <property name="array">
+                     <array>
+                            <value>2</value>
+                     </array>
+              </property>
+       </bean>
 </beans>
