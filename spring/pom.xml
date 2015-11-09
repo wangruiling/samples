@@ -34,6 +34,12 @@
             <artifactId>spring-context</artifactId>
             <version>4.0.5.RELEASE</version>
         </dependency>
+        <!-- Spring EL 表达式支持 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-expression</artifactId>
+            <version>4.0.5.RELEASE</version>
+        </dependency>
 
 
         <dependency>

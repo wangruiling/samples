@@ -18,4 +18,13 @@
                      </array>
               </property>
        </bean>
+
+       <bean class="org.wrl.spring.source.ResourceBean"/>
+
+       <bean id="resourceBean1" class="org.wrl.spring.source.StringToResource">
+              <property name="resource" value="org/wrl/spring/source/test1.properties"/>
+       </bean>
+       <bean id="resourceBean2" class="org.wrl.spring.source.StringToResource">
+              <property name="resource" value="classpath*:org/wrl/spring/source/test1.properties"/>
+       </bean>
 </beans>
