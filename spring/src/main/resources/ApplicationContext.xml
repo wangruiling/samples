@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-       <bean id="hello" name="hello1,jkk" class="org.wrl.spring.spring3.HelloImpl"/>
+       <bean id="hello" name="hello12,jkk" class="org.wrl.spring.spring3.HelloImpl"/>
        <bean class="org.wrl.spring.spring3.HelloImpl">
               <property name="values">
                      <list>
@@ -19,6 +19,7 @@
               </property>
        </bean>
 
+       <!-- ############## Resource相关 start ############# -->
        <bean class="org.wrl.spring.source.ResourceBean"/>
 
 
@@ -58,4 +59,24 @@
                      </array>
               </property>
        </bean>
+       <!-- ############## Resource相关 end ############# -->
+
+       <!-- ############## 在 Bean 定义中使用 EL(xml 风格的配置) start ############# -->
+       <!--SpEL 支持在 Bean 定义时注入，默认使用“#{SpEL 表达式}”表示，其中“#root”根对象默认可以认为是 ApplicationContext，只有 ApplicationContext 实现默认支持 SpEL，获取根对象属性其实是获取容器中的 Bean-->
+       <!--模板默认以前缀“#{”开头，以后缀“}”结尾，且不允许嵌套，如“#{'Hello'#{world}}”错误，如“#{'Hello' + world}”中“world”默认解析为 Bean。当然可以使用“@bean”引用了。-->
+       <bean id="world" class="java.lang.String">
+              <constructor-arg value="#{' World!'}"/>
+       </bean>
+       <bean id="hello1" class="java.lang.String">
+              <constructor-arg value="#{'Hello'}#{world}"/>
+       </bean>
+       <bean id="hello2" class="java.lang.String">
+              <constructor-arg value="#{'Hello' + world}"/>
+              <!-- 不支持嵌套的 -->
+              <!--<constructor-arg value="#{'Hello'#{world}}"/>-->
+       </bean>
+       <bean id="hello3" class="java.lang.String">
+              <constructor-arg value="#{'Hello' + @world}"/>
+       </bean>
+       <!-- ############## 在 Bean 定义中使用 EL end ############# -->
 </beans>
