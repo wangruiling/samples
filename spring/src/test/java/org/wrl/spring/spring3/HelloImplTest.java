@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.*;
 
 /**
@@ -19,6 +21,8 @@ public class HelloImplTest {
         //2、从容器中获取Bean，注意此处完全“面向接口编程，而不是面向实现”
         HelloApi helloApi = context.getBean("hello", HelloApi.class);
 
+        String[] aliases = context.getAliases("hello");
+        System.out.println(Arrays.toString(aliases));
         //3、执行业务逻辑
         helloApi.sayHello();
     }
