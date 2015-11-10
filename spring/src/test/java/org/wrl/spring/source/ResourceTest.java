@@ -114,6 +114,31 @@ public class ResourceTest {
         assertThat(resource.isOpen()).isFalse();
     }
 
+    /**
+     * UrlResource 代表 URL 资源，用于简化 URL 资源访问。“isOpen”永远返回 false，表示可多次读取资源。
+         UrlResource 一般支持如下资源访问：
+          http：通过标准的 http 协议访问 web 资源，如 new UrlResource(“http://地址”)；
+          ftp：通过 ftp 协议访问资源，如 new UrlResource(“ftp://地址”)；
+          file：通过 file 协议访问本地文件系统资源，如 new UrlResource(“file:d:/test.txt”)；
+     * @throws IOException
+     */
+    @Test
+    public void testUrlResource() throws IOException {
+        Resource resource = new UrlResource("file:d:/test.txt");
+        if(resource.exists()) {
+            dumpStream(resource);
+        }
+        System.out.println("path:" + resource.getURL().getPath());
+        assertThat(resource.isOpen()).isFalse();
+
+        Resource resource2 = new UrlResource("http://www.springsource.org");
+        if(resource2.exists()) {
+            dumpStream(resource2);
+        }
+        System.out.println("path:" + resource2.getURL().getPath());
+        assertThat(resource2.isOpen()).isFalse();
+    }
+
     private void dumpStream(Resource resource) {
         InputStream is = null;
         try {
