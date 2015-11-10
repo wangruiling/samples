@@ -21,10 +21,41 @@
 
        <bean class="org.wrl.spring.source.ResourceBean"/>
 
+
        <bean id="resourceBean1" class="org.wrl.spring.source.StringToResource">
               <property name="resource" value="org/wrl/spring/source/test1.properties"/>
        </bean>
        <bean id="resourceBean2" class="org.wrl.spring.source.StringToResource">
               <property name="resource" value="classpath*:org/wrl/spring/source/test1.properties"/>
+       </bean>
+
+
+       <bean id="injectBean" class="org.wrl.spring.source.ResourceInjectBean">
+              <property name="resource" value="org/wrl/spring/source/test1.properties"/>
+       </bean>
+       <bean id="injectBean2" class="org.wrl.spring.source.ResourceInjectBean">
+              <property name="resource" value="classpath:org/wrl/spring/source/test1.properties"/>
+       </bean>
+
+
+
+       <bean id="resourceArrayBean" class="org.wrl.spring.source.ResourceArrayBean">
+              <property name="resources">
+                     <array>
+                            <value>org/wrl/spring/source/test1.properties</value>
+                            <value>LICENSE.txt</value>
+                     </array>
+              </property>
+       </bean>
+       <bean id="resourceArrayBean2" class="org.wrl.spring.source.ResourceArrayBean">
+              <property name="resources" value="classpath*:META-INF/INDEX.LIST"/>
+       </bean>
+       <bean id="resourceArrayBean3" class="org.wrl.spring.source.ResourceArrayBean">
+              <property name="resources">
+                     <array>
+                            <value>org/wrl/spring/source/test1.properties</value>
+                            <value>classpath*:META-INF/INDEX.LIST</value>
+                     </array>
+              </property>
        </bean>
 </beans>
