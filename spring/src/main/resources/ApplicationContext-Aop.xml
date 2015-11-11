@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+       <!--配置目标类-->
+       <bean id="helloWorldService" class="org.wrl.spring.aop.service.impl.HelloworldService"/>
+
+       <!--配置切面-->
+       <bean id="aspect" class="org.wrl.spring.aop.aspect.HelloWorldAspect"/>
+       <aop:config>
+              <!--切入点使用<aop:config>标签下的<aop:pointcut>配置-->
+              <!--expression属性用于定义切入点模式，默认是AspectJ语法，“execution(* org.wrl..*.*(..))”表示匹配org.wrl包及子包下的任何方法执行-->
+              <aop:pointcut id="pointcut" expression="execution(* org.wrl..*.*(..))"/>
+              <!--切面使用<aop:config>标签下的<aop:aspect>标签配置，其中“ref”用来引用切面支持类的方法-->
+              <aop:aspect ref="aspect">
+                     <!--pointcut-ref属性用于引用切入点Bean，而method用来引用切面通知实现类中的方法，该方法就是通知实现，即在目标类方法执行之前调用的方法-->
+                     <aop:before pointcut-ref="pointcut" method="beforeAdvice"/>
+                     <!--切入点除了使用pointcut-ref属性来引用已经存在的切入点，也可以使用pointcut属性来定义，如pointcut="execution(* org.wrl..*.*(..))"，method属性同样是指定通知实现，即在目标类方法执行之后调用的方法-->
+                     <aop:after pointcut="execution(* org.wrl..*.*(..))" method="afterFinallyAdvice"/>
+              </aop:aspect>
+       </aop:config>
+</beans>

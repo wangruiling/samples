@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
        <bean id="hello" name="hello12,jkk" class="org.wrl.spring.spring3.HelloImpl"/>
        <bean class="org.wrl.spring.spring3.HelloImpl">
@@ -77,6 +79,13 @@
        </bean>
        <bean id="hello3" class="java.lang.String">
               <constructor-arg value="#{'Hello' + @world}"/>
+       </bean>
+
+       <!--基于注解风格的 SpEL 配置, 配置时必须使用“<context:annotation-config/>”来开启对注解的支持。-->
+       <context:annotation-config/>
+       <bean id="helloBean1" class="org.wrl.spring.el.SpELBean"/>
+       <bean id="helloBean2" class="org.wrl.spring.el.SpELBean">
+              <property name="value" value="haha"/>
        </bean>
        <!-- ############## 在 Bean 定义中使用 EL end ############# -->
 </beans>

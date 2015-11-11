@@ -573,6 +573,10 @@ public class SpELTest {
     /***************************** 表达式模板 end ******************************/
 
 
+    /***************************** 在 Bean 定义中使用 EL start ******************************/
+    /**
+     * xml 风格的配置
+     */
     @Test
     public void testXmlExpression() {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("ApplicationContext.xml");
@@ -584,17 +588,21 @@ public class SpELTest {
         assertThat(hello3).isEqualTo("Hello World!");
     }
 
-
+    /**
+     * 注解风格的配置
+     * 基于注解风格的 SpEL 配置也非常简单，使用@Value 注解来指定 SpEL 表达式，该注解可以放到字段、方法及方法参数上。
+     */
     @Test
     public void testAnnotationExpression() {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("ApplicationContext.xml");
+        //其中“helloBean1 ”值是 SpEL 表达式的值，而“helloBean2”是通过 setter 注入的值，这说明 setter 注入将覆盖@Value 的值
         SpELBean helloBean1 = ctx.getBean("helloBean1", SpELBean.class);
-        assertThat("Hello World!", helloBean1.getValue());
+        assertThat(helloBean1.getValue()).isEqualTo("Hello World!");
 
         SpELBean helloBean2 = ctx.getBean("helloBean2", SpELBean.class);
-        assertThat("haha", helloBean2.getValue());
+        assertThat(helloBean2.getValue()).isEqualTo("haha");
     }
-
+    /***************************** 在 Bean 定义中使用 EL end ******************************/
 //    @Test
 //    public void testPrefixExpression() {
 //        ApplicationContext ctx = new ClassPathXmlApplicationContext("chapter5/el3.xml");
