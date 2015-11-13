@@ -1,13 +1,16 @@
 package org.wrl.spring.jdbc.model;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+
+/**
+ * 和SqlQuery唯一不同的是使用mapRow来讲每行数据转换为需要的形式，其他地方完全一样
+ */
 public class UserModelMappingSqlQuery extends MappingSqlQuery<UserModel> {
     
     public UserModelMappingSqlQuery(JdbcTemplate jdbcTemplate) {
@@ -20,7 +23,7 @@ public class UserModelMappingSqlQuery extends MappingSqlQuery<UserModel> {
         //可选的编译步骤，当执行查询方法时自动编译，对于编译的SqlQuery不能再对参数进行修改
         compile();
     }
-    
+
     @Override
     protected UserModel mapRow(ResultSet rs, int rowNum) throws SQLException {
         UserModel model = new UserModel();

@@ -293,7 +293,7 @@ public class JdbcTemplateTest {
     }
 
     /**
-     * 存储过程及函数回调
+     * hsqldb调用自定义函数
      */
     @Test
     public void testCallableStatementCreator1() {
@@ -330,13 +330,12 @@ public class JdbcTemplateTest {
         assertThat(outValues.get("result")).isEqualTo(4);
     }
 
+    /**
+     * mysql如何调用自定义函数
+     */
     @Test
     public void testCallableStatementCreator2() {
-        //1.首先登录mysql控制台创建test数据库
-        String url = "jdbc:mysql://localhost:3306/test";
-        DriverManagerDataSource dataSource = new DriverManagerDataSource(url, "root", "");
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        JdbcTemplate mysqlJdbcTemplate = new JdbcTemplate(dataSource);
+        JdbcTemplate mysqlJdbcTemplate = new JdbcTemplate(getMysqlDataSource());
 
         //2.创建自定义函数
         String createFunctionSql =
@@ -345,10 +344,13 @@ public class JdbcTemplateTest {
         String dropFunctionSql = "DROP FUNCTION IF EXISTS FUNCTION_TEST";
         mysqlJdbcTemplate.update(dropFunctionSql);
         mysqlJdbcTemplate.update(createFunctionSql);
+
         //3.准备sql
         final String callFunctionSql = "{?= call FUNCTION_TEST(?)}";
+
         //4.定义参数
         List<SqlParameter> params = new ArrayList<SqlParameter>();
+        //params：无需使用SqlReturnResultSet提取结果集数据，而是使用SqlOutParameter来描述自定义函数返回值
         params.add(new SqlOutParameter("result", Types.INTEGER));
         params.add(new SqlParameter("str", Types.VARCHAR));
 
@@ -357,24 +359,31 @@ public class JdbcTemplateTest {
             public CallableStatement createCallableStatement(Connection conn)
                     throws SQLException {
                 CallableStatement cstmt = conn.prepareCall(callFunctionSql);
+                //cstmt.registerOutParameter(1, Types.INTEGER)：将OUT类型参数注册为JDBC类型Types.INTEGER，此处即返回值类型为Types.INTEGER
                 cstmt.registerOutParameter(1, Types.INTEGER);
                 cstmt.setString(2, "test");
                 return cstmt;
             }
         }, params);
 
-        Assert.assertEquals(4, outValues.get("result"));
+        //outValues.get("result")：获取结果，直接返回Integer类型，比hsqldb简单
+        assertThat(outValues.get("result")).isEqualTo(4);
     }
 
+    /**
+     * 调用存储过程
+     */
     @Test
     public void testCallableStatementCreator3() {
+        //定义存储过程sql
         final String callProcedureSql = "{call PROCEDURE_TEST(?, ?)}";
         List<SqlParameter> params = new ArrayList<SqlParameter>();
+        //params：定义存储过程参数；SqlInOutParameter描述INOUT类型参数、SqlOutParameter描述OUT类型参数
         params.add(new SqlInOutParameter("inOutName", Types.VARCHAR));
         params.add(new SqlOutParameter("outId", Types.INTEGER));
 
         Map<String, Object> outValues = jdbcTemplate.call(new CallableStatementCreator() {
-
+            //CallableStatementCreator：用于创建CallableStatement，并设值及注册OUT参数类型
             @Override
             public CallableStatement createCallableStatement(Connection conn) throws SQLException {
                 CallableStatement cstmt = conn.prepareCall(callProcedureSql);
@@ -384,20 +393,25 @@ public class JdbcTemplateTest {
                 return cstmt;
             }
         }, params);
-        Assert.assertEquals("Hello,test", outValues.get("inOutName"));
-        Assert.assertEquals(0, outValues.get("outId"));
+
+        //outValues：通过SqlInOutParameter及SqlOutParameter参数定义的name来获取存储过程结果
+        assertThat(outValues.get("inOutName")).isEqualTo("Hello,test");
+        assertThat(outValues.get("outId")).isEqualTo(0);
     }
 
 
-
+    /************** NamedParameterJdbcTemplate start **************/
     @Test
     public void testNamedParameterJdbcTemplate1() {
-        NamedParameterJdbcTemplate namedParameterJdbcTemplate = null;
-        //namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-        namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        //NamedParameterJdbcTemplate初始化：可以使用DataSource或JdbcTemplate	对象作为构造器参数初始化
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+
+        //其中“:name”就是命名参数；
         String insertSql = "insert into test(name) values(:name)";
         String selectSql = "select * from test where name=:name";
         String deleteSql = "delete from test where name=:name";
+
+        //其中paramMap是一个Map类型，包含键为“name”，值为“name5”的键值对，也就是为命名参数设值的数据
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("name", "name5");
         namedParameterJdbcTemplate.update(insertSql, paramMap);
@@ -453,6 +467,8 @@ public class JdbcTemplateTest {
         SqlParameterSource paramSource = new BeanPropertySqlParameterSource(model);
         namedParameterJdbcTemplate.update(insertSql, paramSource);
     }
+    /************** NamedParameterJdbcTemplate end **************/
+
 
     @Test
     public void testSimpleJdbcTemplate() {
@@ -469,11 +485,13 @@ public class JdbcTemplateTest {
 
     }
 
+
+    /********************* 关系数据库操作对象化 start ***********************/
     @Test
     public void testSqlQuery() {
         SqlQuery query = new UserModelSqlQuery(jdbcTemplate);
         List<UserModel> result = query.execute("name5");
-        Assert.assertEquals(0, result.size());
+        assertThat(result.size()).isEqualTo(0);
     }
 
 
@@ -484,7 +502,7 @@ public class JdbcTemplateTest {
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("name", "name5");
         UserModel result = query.findObjectByNamedParam(paramMap);
-        Assert.assertNotNull(result);
+        assertThat(result).isNotNull();
     }
 
 
@@ -495,7 +513,7 @@ public class JdbcTemplateTest {
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("name", "name5");
         UserModel result = query.findObjectByNamedParam(paramMap);
-        Assert.assertNotNull(result);
+        assertThat(result).isNotNull();
     }
 
 
@@ -637,9 +655,14 @@ public class JdbcTemplateTest {
     }
 
 
+    /**
+     * JdbcTemplate获取自动生成主键方式
+     * @throws SQLException
+     */
     @Test
     public void testFetchKey1() throws SQLException {
         final String insertSql = "insert into test(name) values('name5')";
+        //generatedKeyHolder是KeyHolder类型，用于获取自动生成的主键或复合主键；如使用getKey方法获取自动生成的主键
         KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
@@ -651,6 +674,10 @@ public class JdbcTemplateTest {
         Assert.assertEquals(0, generatedKeyHolder.getKey());
     }
 
+    /**
+     * SqlUpdate获取自动生成主键方式
+     * SqlUpdate获取自动生成主键方式和JdbcTemplate完全一样，可以使用setReturnGeneratedKeys（true）表示要获取自动生成键；也可以使用setGeneratedKeysColumnNames指定自动生成键列名
+     */
     @Test
     public void testFetchKey2() {
         final String insertSql = "insert into test(name) values('name5')";
@@ -665,6 +692,10 @@ public class JdbcTemplateTest {
     }
 
 
+    /******************* JDBC批量操作 start *******************/
+    /**
+     * JdbcTemplate批处理：支持普通的批处理及占位符批处理
+     */
     @Test
     public void testBatchUpdate1() {
         String insertSql = "insert into test(name) values('name5')";
@@ -673,6 +704,9 @@ public class JdbcTemplateTest {
         Assert.assertEquals(2, jdbcTemplate.queryForInt("select count(*) from test"));
     }
 
+    /**
+     * JdbcTemplate还可以通过batchUpdate(String sql, final BatchPreparedStatementSetter pss)方法进行批处理，该方式使用预编译语句，然后通过BatchPreparedStatementSetter实现进行设值（setValues）及指定批处理大小（getBatchSize）
+     */
     @Test
     public void testBatchUpdate2() {
         String insertSql = "insert into test(name) values(?)";
@@ -690,6 +724,9 @@ public class JdbcTemplateTest {
         Assert.assertEquals(2, jdbcTemplate.queryForInt("select count(*) from test"));
     }
 
+    /**
+     * NamedParameterJdbcTemplate批处理：支持命名参数批处理
+     */
     @Test
     public void testBatchUpdate3() {
         NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
@@ -701,6 +738,9 @@ public class JdbcTemplateTest {
         Assert.assertEquals(2, jdbcTemplate.queryForInt("select count(*) from test"));
     }
 
+    /**
+     * SimpleJdbcTemplate批处理：已更简单的方式进行批处理
+     */
     @Test
     public void testBatchUpdate4() {
         SimpleJdbcTemplate simpleJdbcTemplate = new SimpleJdbcTemplate(jdbcTemplate);
@@ -712,6 +752,9 @@ public class JdbcTemplateTest {
         Assert.assertEquals(2, jdbcTemplate.queryForInt("select count(*) from test"));
     }
 
+    /**
+     * SimpleJdbcInsert批处理
+     */
     @Test
     public void testBatchUpdate5() {
         SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate);
@@ -723,17 +766,18 @@ public class JdbcTemplateTest {
     }
 
 
+    /**
+     * 集成Spring JDBC及最佳实践
+     */
     @Test
     public void testBestPractice() {
-        String[] configLocations = new String[] {
-                "classpath:chapter7/applicationContext-resources.xml",
-                "classpath:chapter7/applicationContext-jdbc.xml"};
+        String[] configLocations = new String[] {"classpath:applicationContext-jdbc.xml"};
         ApplicationContext ctx = new ClassPathXmlApplicationContext(configLocations);
         IUserDao userDao = ctx.getBean(IUserDao.class);
         UserModel model = new UserModel();
         model.setMyName("test");
         userDao.save(model);
-        Assert.assertEquals(1, userDao.countAll());
+        assertThat(userDao.countAll()).isEqualTo(1);
     }
 
 
