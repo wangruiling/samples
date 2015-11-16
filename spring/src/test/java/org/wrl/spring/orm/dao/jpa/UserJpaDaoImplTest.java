@@ -7,9 +7,11 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.wrl.spring.orm.UserModel;
+import org.wrl.spring.orm.dao.IUserDao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.math.BigInteger;
 import java.sql.SQLException;
 
 /**
@@ -20,11 +22,12 @@ import java.sql.SQLException;
  */
 public class UserJpaDaoImplTest {
     private static EntityManagerFactory entityManagerFactory;
+    private static ApplicationContext ctx;
 
     @BeforeClass
     public static void setUpClass() {
         String[] configLocations = new String[] {"applicationContext-jpa.xml"};
-        ApplicationContext ctx = new ClassPathXmlApplicationContext(configLocations);
+        ctx = new ClassPathXmlApplicationContext(configLocations);
         entityManagerFactory = ctx.getBean(EntityManagerFactory.class);
     }
 
@@ -87,7 +90,12 @@ public class UserJpaDaoImplTest {
 
     @Test
     public void testSave() throws Exception {
-
+        UserModel model = new UserModel();
+        model.setMyName("test");
+        IUserDao userDao = ctx.getBean("userDao", IUserDao.class);
+        userDao.save(model);
+        BigInteger count = userDao.countAll();
+        System.out.println("count:" + count);
     }
 
     @Test

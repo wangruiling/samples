@@ -8,6 +8,7 @@ import org.wrl.spring.orm.dao.IUserDao;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.math.BigInteger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,7 +18,7 @@ import javax.persistence.Query;
  */
 @Transactional(propagation = Propagation.REQUIRED)
 public class UserJpaDaoImpl implements IUserDao {
-    @PersistenceContext(unitName = "persistenceUnit")
+    @PersistenceContext
     private EntityManager entityManager;
 
     @Override
@@ -26,10 +27,9 @@ public class UserJpaDaoImpl implements IUserDao {
     }
 
     @Override
-    public int countAll() {
-        Query query = entityManager.createNativeQuery("");
-        query.getSingleResult();
-        return 0;
+    public BigInteger countAll() {
+        Query query = entityManager.createNativeQuery("SELECT count(*) FROM test");
+        return (BigInteger) query.getSingleResult();
     }
 
     @Override

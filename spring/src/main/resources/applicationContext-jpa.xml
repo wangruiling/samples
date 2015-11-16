@@ -50,9 +50,18 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
-
     <!--为@Transactional注解事务开启事务支持-->
     <tx:annotation-driven transaction-manager="txManager"/>
+
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor">
+        <!--<property name="persistenceContexts">-->
+            <!--<map>-->
+                <!--<entry key="unit" value="p"/>-->
+            <!--</map>-->
+        <!--</property>-->
+    </bean>
+
+    <bean id="userDao" class="org.wrl.spring.orm.dao.jpa.UserJpaDaoImpl"/>
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
         <property name="targetDataSource">

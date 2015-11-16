@@ -2,6 +2,8 @@ package org.wrl.spring.orm.dao;
 
 import org.wrl.spring.orm.UserModel;
 
+import java.math.BigInteger;
+
 /**
  * Created with IntelliJ IDEA.
  *
@@ -12,7 +14,7 @@ public interface IUserDao {
 
     void save(UserModel model);
 
-    int countAll();
+    BigInteger countAll();
 
     void delete(UserModel model);
 }
