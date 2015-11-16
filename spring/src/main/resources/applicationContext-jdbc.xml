@@ -19,16 +19,20 @@
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
         <property name="targetDataSource">
-            <bean class="org.logicalcobwebs.proxool.ProxoolDataSource">
-                <property name="driver" value="${db.driver.class}" />
-                <property name="driverUrl" value="${db.url}" />
-                <property name="user" value="${db.username}" />
-                <property name="password" value="${db.password}" />
-                <property name="maximumConnectionCount" value="${proxool.maxConnCount}" />
-                <property name="minimumConnectionCount" value="${proxool.minConnCount}" />
-                <property name="statistics" value="${proxool.statistics}" />
-                <property name="simultaneousBuildThrottle" value="${proxool.simultaneousBuildThrottle}" />
-                <property name="trace" value="${proxool.trace}" />
+            <bean class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+                <property name="url" value="${jdbc.url}" />
+                <property name="username" value="${jdbc.username}" />
+                <property name="password" value="${jdbc.password}" />
+                <property name="driverClassName" value="${jdbc.driver}" />
+
+                <property name="maxActive" value="${jdbc.pool.maxActive}" />
+                <property name="maxIdle" value="${jdbc.pool.maxIdle}" />
+                <property name="minIdle" value="0" />
+                <property name="defaultAutoCommit" value="false" />
+
+                <!-- 连接Idle10分钟后超时，每1分钟检查一次 -->
+                <property name="timeBetweenEvictionRunsMillis" value="60000" />
+                <property name="minEvictableIdleTimeMillis" value="600000" />
             </bean>
         </property>
     </bean>

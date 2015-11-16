@@ -13,9 +13,14 @@
 
     <properties>
         <spring.version>4.0.5.RELEASE</spring.version>
+        <spring-data-jpa.version>1.9.1.RELEASE</spring-data-jpa.version>
+        <hibernate.version>4.3.10.Final</hibernate.version>
         <aspectj.version>1.8.0</aspectj.version>
         <assertj.version>3.0.0</assertj.version>
         <druid.version>1.0.16</druid.version>
+        <tomcat-jdbc.version>8.0.5</tomcat-jdbc.version>
+        <log4j2.version>2.4</log4j2.version>
+        <log4jdbc-log4j2-jdbc4.1.version>1.16</log4jdbc-log4j2-jdbc4.1.version>
         <!-- Plugin的属性 -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -62,6 +67,32 @@
             <artifactId>spring-orm</artifactId>
             <version>${spring.version}</version>
         </dependency>
+        <!-- spring data jpa -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>${spring-data-jpa.version}</version>
+        </dependency>
+
+        <!-- hibernate -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        <!-- for JPA, use hibernate-entitymanager instead of hibernate-core -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        <!-- 可选(hibernate-core、hibernate-entitymanager已经依赖) -->
+        <!--<dependency>-->
+            <!--<groupId>org.hibernate.javax.persistence</groupId>-->
+            <!--<artifactId>hibernate-jpa-2.1-api</artifactId>-->
+            <!--<version>1.0.0.Final</version>-->
+        <!--</dependency>-->
+
 
         <!-- hsqldb 数据库-->
         <dependency>
@@ -70,17 +101,14 @@
             <version>2.3.3</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.cloudhopper.proxool</groupId>
-            <artifactId>proxool</artifactId>
-            <version>0.9.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.cloudhopper.proxool</groupId>
-            <artifactId>proxool-cglib</artifactId>
-            <version>0.9.1</version>
-        </dependency>
 
+        <!-- connection pool -->
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jdbc</artifactId>
+            <version>${tomcat-jdbc.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -100,6 +128,92 @@
             <artifactId>aspectjweaver</artifactId>
             <version>${aspectj.version}</version>
         </dependency>
+
+        <!-- LOGGING begin -->
+        <!-- 日志实现使用log4j2 -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+
+        <!-- 如果存在代码使用log4j 1.x的，日志会被桥接到log4j2上 -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-1.2-api</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+
+        <!-- 如果存在代码使用commons-logging的，日志会被桥接到log4j2上 -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-jcl</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+
+        <!-- 如果项目中有使用slf4j的api，将slf4j的日志交由log4j2进行输出 -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+
+        <!-- 如果存在代码使用java.util.logging的，日志会被桥接到log4j2上 -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-jul</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+
+        <!--  log4jdbc-log4j2  -->
+        <dependency>
+            <groupId>org.bgee.log4jdbc-log4j2</groupId>
+            <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
+            <version>${log4jdbc-log4j2-jdbc4.1.version}</version>
+        </dependency>
+
+        <!--Web Servlet Support-->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-web</artifactId>
+            <version>${log4j2.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--Tag Library-->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.logging.log4j</groupId>-->
+        <!--<artifactId>log4j-taglib</artifactId>-->
+        <!--<version>${log4j2.version}</version>-->
+        <!--</dependency>-->
+
+        <!--Apache Flume Appender-->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.logging.log4j</groupId>-->
+        <!--<artifactId>log4j-flume-ng</artifactId>-->
+        <!--<version>${log4j2.version}</version>-->
+        <!--</dependency>-->
+
+        <!--NoSQL Appenders-->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.logging.log4j</groupId>-->
+        <!--<artifactId>log4j-nosql</artifactId>-->
+        <!--<version>${log4j2.version}</version>-->
+        <!--</dependency>-->
+
+        <!--IO Streams-->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.logging.log4j</groupId>-->
+        <!--<artifactId>log4j-iostreams</artifactId>-->
+        <!--<version>${log4j2.version}</version>-->
+        <!--</dependency>-->
+        <!-- LOGGING end -->
+
 
         <dependency>
             <groupId>junit</groupId>

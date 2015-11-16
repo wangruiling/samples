@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+          
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:resources.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--指定JPA配置文件为persistence.xml，且该配置文件非常简单，具体配置完全在Spring中进行-->
+        <!--<property name="persistenceXmlLocation" value="classpath*:/persistence.xml"/>-->
+        <!--指定持久化单元名字，即JPA配置文件中指定的-->
+        <!--<property name="persistenceUnitName" value="persistenceUnit"/>-->
+        <property name="packagesToScan" value="org.wrl.spring.orm"/>
+
+        <!--指定JPA持久化提供商，此处使用Hibernate实现HibernatePersistence类-->
+        <property name="persistenceProvider" ref="persistenceProvider"/>
+        <!--指定实现厂商专用特性-->
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
+        <!--如果指定jpaVendorAdapter此属性可选，此处为HibernateJpaDialect-->
+        <property name="jpaDialect" ref="jpaDialect"/>
+
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.show_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="persistenceProvider" class="org.hibernate.jpa.HibernatePersistenceProvider"/>
+
+    <!--指定实现厂商专用特性，即generateDdl= false表示不自动生成DDL，database= HSQL表示使用hsqldb数据库-->
+    <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="generateDdl" value="false" />
+        <property name="database" value="HSQL"/>
+    </bean>
+
+    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
+
+    <bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+
+    <!--为@Transactional注解事务开启事务支持-->
+    <tx:annotation-driven transaction-manager="txManager"/>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+        <property name="targetDataSource">
+            <bean class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+                <property name="url" value="${jdbc.url}" />
+                <property name="username" value="${jdbc.username}" />
+                <property name="password" value="${jdbc.password}" />
+                <property name="driverClassName" value="${jdbc.driver}" />
+
+                <property name="maxActive" value="${jdbc.pool.maxActive}" />
+                <property name="maxIdle" value="${jdbc.pool.maxIdle}" />
+                <property name="minIdle" value="0" />
+                <property name="defaultAutoCommit" value="false" />
+
+                <!-- 连接Idle10分钟后超时，每1分钟检查一次 -->
+                <property name="timeBetweenEvictionRunsMillis" value="60000" />
+                <property name="minEvictableIdleTimeMillis" value="600000" />
+            </bean>
+        </property>
+    </bean>
+</beans>
