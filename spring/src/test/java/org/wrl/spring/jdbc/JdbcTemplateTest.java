@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.*;
 import org.springframework.jdbc.core.namedparam.*;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.object.SqlFunction;
 import org.springframework.jdbc.object.SqlQuery;
@@ -470,20 +469,23 @@ public class JdbcTemplateTest {
     /************** NamedParameterJdbcTemplate end **************/
 
 
-    @Test
-    public void testSimpleJdbcTemplate() {
-        //还支持DataSource和NamedParameterJdbcTemplate作为构造器参数
-        SimpleJdbcTemplate simpleJdbcTemplate = new SimpleJdbcTemplate(jdbcTemplate);
-        String insertSql = "insert into test(id, name) values(?, ?)";
-        simpleJdbcTemplate.update(insertSql, 10, "name5");
-        String selectSql = "select * from test where id=? and name=?";
-        List<Map<String, Object>> result = simpleJdbcTemplate.queryForList(selectSql, 10, "name5");
-        Assert.assertEquals(1, result.size());
-        RowMapper<UserModel> mapper = new UserRowMapper();
-        List<UserModel> result2 = simpleJdbcTemplate.query(selectSql, mapper, 10, "name5");
-        Assert.assertEquals(1, result2.size());
-
-    }
+    /**
+     * SimpleJdbcTemplate类在spring-jdbc 4.2.x之后已被删除，其功能完全可以被JdbcTemplate和NamedParameterJdbcTemplate代替
+     */
+//    @Test
+//    public void testSimpleJdbcTemplate() {
+//        //还支持DataSource和NamedParameterJdbcTemplate作为构造器参数
+//        SimpleJdbcTemplate simpleJdbcTemplate = new SimpleJdbcTemplate(jdbcTemplate);
+//        String insertSql = "insert into test(id, name) values(?, ?)";
+//        simpleJdbcTemplate.update(insertSql, 10, "name5");
+//        String selectSql = "select * from test where id=? and name=?";
+//        List<Map<String, Object>> result = simpleJdbcTemplate.queryForList(selectSql, 10, "name5");
+//        Assert.assertEquals(1, result.size());
+//        RowMapper<UserModel> mapper = new UserRowMapper();
+//        List<UserModel> result2 = simpleJdbcTemplate.query(selectSql, mapper, 10, "name5");
+//        Assert.assertEquals(1, result2.size());
+//
+//    }
 
 
     /********************* 关系数据库操作对象化 start ***********************/
@@ -592,7 +594,7 @@ public class JdbcTemplateTest {
         insert.compile();
         //1.普通插入
         insert.execute(args);
-        Assert.assertEquals(1, jdbcTemplate.queryForInt("select count(*) from test"));
+        assertThat(jdbcTemplate.queryForObject("select count(*) from test", Integer.class)).isEqualTo(1);
         //2.插入时获取主键值
         insert = new SimpleJdbcInsert(jdbcTemplate);
         insert.withTableName("test");
@@ -605,7 +607,7 @@ public class JdbcTemplateTest {
         insert.setGeneratedKeyName("id");
         int[] updateCount = insert.executeBatch(new Map[] {args, args, args});
         Assert.assertEquals(1, updateCount[0]);
-        Assert.assertEquals(5, jdbcTemplate.queryForInt("select count(*) from test"));
+        assertThat(jdbcTemplate.queryForObject("select count(*) from test", Integer.class)).isEqualTo(5);
     }
 
 
@@ -701,7 +703,7 @@ public class JdbcTemplateTest {
         String insertSql = "insert into test(name) values('name5')";
         String[] batchSql = new String[] {insertSql, insertSql};
         jdbcTemplate.batchUpdate(batchSql);
-        Assert.assertEquals(2, jdbcTemplate.queryForInt("select count(*) from test"));
+        assertThat(jdbcTemplate.queryForObject("select count(*) from test", Integer.class)).isEqualTo(2);
     }
 
     /**
@@ -721,7 +723,7 @@ public class JdbcTemplateTest {
                 return batchValues.length;
             }
         });
-        Assert.assertEquals(2, jdbcTemplate.queryForInt("select count(*) from test"));
+        assertThat(jdbcTemplate.queryForObject("select count(*) from test", Integer.class)).isEqualTo(2);
     }
 
     /**
@@ -735,22 +737,23 @@ public class JdbcTemplateTest {
         model.setMyName("name5");
         SqlParameterSource[] params = SqlParameterSourceUtils.createBatch(new Object[] {model, model});
         namedParameterJdbcTemplate.batchUpdate(insertSql, params);
-        Assert.assertEquals(2, jdbcTemplate.queryForInt("select count(*) from test"));
+        assertThat(jdbcTemplate.queryForObject("select count(*) from test", Integer.class)).isEqualTo(2);
     }
 
     /**
      * SimpleJdbcTemplate批处理：已更简单的方式进行批处理
+     * SimpleJdbcTemplate类在spring-jdbc 4.2.x之后已被删除，其功能完全可以被JdbcTemplate和NamedParameterJdbcTemplate代替
      */
-    @Test
-    public void testBatchUpdate4() {
-        SimpleJdbcTemplate simpleJdbcTemplate = new SimpleJdbcTemplate(jdbcTemplate);
-        String insertSql = "insert into test(name) values(?)";
-        List<Object[]> params = new ArrayList<Object[]>();
-        params.add(new Object[]{"name5"});
-        params.add(new Object[]{"name5"});
-        simpleJdbcTemplate.batchUpdate(insertSql, params);
-        Assert.assertEquals(2, jdbcTemplate.queryForInt("select count(*) from test"));
-    }
+//    @Test
+//    public void testBatchUpdate4() {
+//        SimpleJdbcTemplate simpleJdbcTemplate = new SimpleJdbcTemplate(jdbcTemplate);
+//        String insertSql = "insert into test(name) values(?)";
+//        List<Object[]> params = new ArrayList<Object[]>();
+//        params.add(new Object[]{"name5"});
+//        params.add(new Object[]{"name5"});
+//        simpleJdbcTemplate.batchUpdate(insertSql, params);
+//        assertThat(jdbcTemplate.queryForObject("select count(*) from test", Integer.class)).isEqualTo(2);
+//    }
 
     /**
      * SimpleJdbcInsert批处理
@@ -762,7 +765,7 @@ public class JdbcTemplateTest {
         Map<String, Object> valueMap = new HashMap<String, Object>();
         valueMap.put("name", "name5");
         insert.executeBatch(new Map[] {valueMap, valueMap});
-        Assert.assertEquals(2, jdbcTemplate.queryForInt("select count(*) from test"));
+        assertThat(jdbcTemplate.queryForObject("select count(*) from test", Integer.class)).isEqualTo(2);
     }
 
 

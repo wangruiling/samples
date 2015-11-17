@@ -12,9 +12,10 @@
     <url>http://maven.apache.org</url>
 
     <properties>
-        <spring.version>4.0.5.RELEASE</spring.version>
+        <springframework.version>4.2.3.RELEASE</springframework.version>
+        <spring-data-commons.version>1.11.1.RELEASE</spring-data-commons.version>
         <spring-data-jpa.version>1.9.1.RELEASE</spring-data-jpa.version>
-        <hibernate.version>4.3.10.Final</hibernate.version>
+        <hibernate.version>5.0.3.Final</hibernate.version>
         <aspectj.version>1.8.0</aspectj.version>
         <assertj.version>3.0.0</assertj.version>
         <druid.version>1.0.16</druid.version>
@@ -30,42 +31,49 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
+            <version>${springframework.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>${spring.version}</version>
+            <version>${springframework.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
+            <version>${springframework.version}</version>
         </dependency>
 
         <!-- Spring EL 表达式支持 -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-expression</artifactId>
-            <version>${spring.version}</version>
+            <version>${springframework.version}</version>
         </dependency>
         <!-- Spring 对JDBC的抽象框架模块 -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-            <version>${spring.version}</version>
+            <version>${springframework.version}</version>
         </dependency>
         <!--Spring事务管理及一致的DAO访问及非检查异常模块-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
-            <version>${spring.version}</version>
+            <version>${springframework.version}</version>
         </dependency>
+
         <!--Spring对ORM框架支持-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
-            <version>${spring.version}</version>
+            <version>${springframework.version}</version>
+        </dependency>
+        <!-- spring-data-commons -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+            <version>${spring-data-commons.version}</version>
         </dependency>
         <!-- spring data jpa -->
         <dependency>
