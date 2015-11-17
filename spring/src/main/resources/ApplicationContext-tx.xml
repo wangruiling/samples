@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <description>在Spring配置文件中定义事务管理器</description>
+
+    <!-- ************ 声明对本地事务的支持 start ************ -->
+
+    <!--JDBC及iBATIS、MyBatis框架事务管理器-->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--通过dataSource属性指定需要事务管理的单个javax.sql.DataSource对象-->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--Jdo事务管理器-->
+    <bean id="jdoTxManager" class=" org.springframework.orm.jdo.JdoTransactionManager">
+        <!--通过persistenceManagerFactory属性指定需要事务管理的javax.jdo.PersistenceManagerFactory对象-->
+        <!--<property name="persistenceManagerFactory" ref="persistenceManagerFactory"/>-->
+    </bean>
+
+    <!--Jpa事务管理器-->
+    <bean id="jpaTxManager" class=" org.springframework.orm.jpa.JpaTransactionManager">
+        <!--通过entityManagerFactory属性指定需要事务管理的javax.persistence.EntityManagerFactory对象-->
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <!--Hibernate事务管理器-->
+    <bean id="hibernateTxManager" class=" org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <!-- ************ 声明对本地事务的支持 end ************ -->
+
+    <!-- ************ Spring对全局事务的支持 start *************-->
+    <!--Jta事务管理器-->
+    <bean id="jtaTxManager" class=" org.springframework.transaction.jta.JtaTransactionManager">
+        <!--属性transactionManagerName指定了JTA事务管理器的JNDI名字，从而将事务管理委托给该事务管理器-->
+        <property name="transactionManagerName" value=" java:comp/TransactionManager"/>
+    </bean>
+    <!--jtaDataSource Bean表示从JNDI中获取的数据源-->
+    <jee:jndi-lookup id="jtaDataSource" jndi-name="jdbc/test"/>
+    <!-- ************ Spring对全局事务的支持 end *************-->
+
+    <!-- Hibernate SessionFactory -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+
+        <property name="hibernateProperties">
+            <props>
+                <!--数据库方言设置-->
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+
+                <prop key="hibernate.jdbc.batch_size">50</prop>
+                <prop key="hibernate.jdbc.fetch_size">50</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.use_sql_comments">true</prop>
+                 <prop key="hibernate.generate_statistics">true</prop>
+                <prop key="hibernate.connection.release_mode">auto</prop>
+                <prop key="hibernate.autoReconnect">true</prop>
+                <!--<prop key="hibernate.hbm2ddl.auto">update</prop> -->
+                <prop key="hibernate.cache.use_second_level_cache">false</prop>
+                <prop key="hibernate.cache.use_query_cache">false</prop>
+                <!--<prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>-->
+            </props>
+        </property>
+    </bean>
+
+    <!--jpa EntityManagerFactory 配置-->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--指定JPA配置文件为persistence.xml，且该配置文件非常简单，具体配置完全在Spring中进行-->
+        <!--<property name="persistenceXmlLocation" value="classpath*:/persistence.xml"/>-->
+        <!--指定持久化单元名字，即JPA配置文件中指定的-->
+        <!--<property name="persistenceUnitName" value="persistenceUnit"/>-->
+        <property name="packagesToScan" value="org.wrl.spring.orm"/>
+
+        <!--指定JPA持久化提供商，此处使用Hibernate实现HibernatePersistence类-->
+        <property name="persistenceProvider" ref="persistenceProvider"/>
+        <!--指定实现厂商专用特性-->
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
+        <!--如果指定jpaVendorAdapter此属性可选，此处为HibernateJpaDialect-->
+        <property name="jpaDialect" ref="jpaDialect"/>
+
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.show_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="persistenceProvider" class="org.hibernate.jpa.HibernatePersistenceProvider"/>
+
+    <!--指定实现厂商专用特性，即generateDdl= false表示不自动生成DDL，database= HSQL表示使用hsqldb数据库-->
+    <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="generateDdl" value="false"/>
+        <property name="database" value="HSQL"/>
+    </bean>
+
+    <!--jpaDialect该属性所对应的对象指定了如何获取连接对象、开启事务、关闭事务等事务管理相关的行为-->
+    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+        <property name="targetDataSource">
+            <bean class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+                <property name="driverClassName" value="${jdbc.driver}"/>
+
+                <property name="maxActive" value="${jdbc.pool.maxActive}"/>
+                <property name="maxIdle" value="${jdbc.pool.maxIdle}"/>
+                <property name="minIdle" value="0"/>
+                <property name="defaultAutoCommit" value="false"/>
+
+                <!-- 连接Idle10分钟后超时，每1分钟检查一次 -->
+                <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+                <property name="minEvictableIdleTimeMillis" value="600000"/>
+            </bean>
+        </property>
+    </bean>
+</beans>
