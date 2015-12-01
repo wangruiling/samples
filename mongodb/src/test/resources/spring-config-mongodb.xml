@@ -7,10 +7,13 @@
        http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
+
     <context:component-scan base-package="org.wrl.samples.mongo" >
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
         <!--<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>-->
     </context:component-scan>
+
+    <!-- mongo配置文件，参考:http://docs.spring.io/spring-data/data-mongodb/docs/current/reference/html/-->
 
     <!-- 定义mongo连接对象，对应的是mongodb官方jar包中的MongoClient，replica-set设置集群副本的ip地址和端口  credentials="user:password@database"-->
     <mongo:mongo-client id="mongoClient" host="127.0.0.1" port="27017">
@@ -24,6 +27,8 @@
     <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
     </bean>
+
+    <bean class="org.springframework.data.mongodb.core.MongoExceptionTranslator"/>
 
     <!-- 映射转换器，扫描back-package目录下的文件，根据注释，把它们作为mongodb的一个collection的映射 -->
     <mongo:mapping-converter base-package="org.wrl.samples.mongo.**.mentity"/>
