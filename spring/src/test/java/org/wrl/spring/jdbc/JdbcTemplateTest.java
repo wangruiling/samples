@@ -32,14 +32,14 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Created with IntelliJ IDEA.
  * JdbcTemplate是Spring JDBC抽象框架提供的JDBC模板类
  * @author: wangrl
- * @Date: 2015-11-12 15:28
+ * @Date: 2015-11-12 15:28http://emuirom123.dbankcloud.com/Che1-CL10_EMUI3.1_Android5.1_5.11.16.zip?rid=1957
  */
 public class JdbcTemplateTest {
     //JdbcTemplate是Spring JDBC抽象框架提供的JDBC模板类,JdbcTemplate对象是线程安全的
     private static JdbcTemplate jdbcTemplate;
 
     @BeforeClass
-    public static void setUpClass() {
+    public static void settilsUpClass() {
         String url = "jdbc:hsqldb:mem:test";
         String username = "sa";
         String password = "";
