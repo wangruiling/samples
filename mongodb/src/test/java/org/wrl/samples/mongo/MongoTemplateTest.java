@@ -18,7 +18,7 @@ import org.wrl.samples.mongo.mentity.Customer;
 @ContextConfiguration(locations = "classpath:/*.xml")
 public class MongoTemplateTest {
     @Autowired
-    private MongoTemplate mongo;
+    private MongoTemplate mongoTemplate;
 
 
     @Test
@@ -26,6 +26,6 @@ public class MongoTemplateTest {
         Customer c = new Customer();
         c.setFirstName("wu");
         c.setLastName("wei");
-        mongo.insert(c);
+        mongoTemplate.insert(c);
     }
 }
