@@ -5,9 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.wrl.spring.orm.UserModel;
 import org.wrl.spring.orm.dao.IUserDao;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.*;
 import java.math.BigInteger;
 
 /**
@@ -18,8 +16,11 @@ import java.math.BigInteger;
  */
 @Transactional(propagation = Propagation.REQUIRED)
 public class UserJpaDaoImpl implements IUserDao {
-    @PersistenceContext
+    @PersistenceContext(unitName = "entityManagerFactory")
     private EntityManager entityManager;
+
+    @PersistenceUnit(unitName = "entityManagerFactory")
+    private EntityManagerFactory entityManagerFactory;
 
     @Override
     public void save(UserModel model) {
