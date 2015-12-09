@@ -12,6 +12,6 @@ import org.springframework.context.annotation.Import;
 public class ApplicationContextConfig2 {
     @Bean(name = {"message2"})
     public String message() {
-        return "hello";
+        return "hello2";
     }
 }

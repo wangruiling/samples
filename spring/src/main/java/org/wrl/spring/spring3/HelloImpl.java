@@ -27,10 +27,6 @@ public class HelloImpl implements HelloApi {
         this.values = values;
     }
 
-    public static void main(String[] args) {
-        List<Integer> n = Arrays.asList(1, 3, 2, 7, 6, 5, 9);
-        n.stream().filter(x -> x % 2 == 0).map(y -> y * 2).forEach(z -> System.out.println(z));
-    }
     @Override
     public void sayHello() {
         System.out.println("Hello World!");
