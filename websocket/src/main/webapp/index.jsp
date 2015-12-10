@@ -96,6 +96,17 @@
         socket.onmessage = function(event) {
             addMessage(event.data);
         };
+
+        //当Browser和WebSocketServer连接成功后，会触发onopen消息
+        socket.onopen = function(){socket.send(JSON.stringify({
+            content : "test",
+            nickname : "nickname"
+        }))};
+        //当Browser接收到WebSocketServer端发送的关闭连接请求时，就会触发onclose消息
+        socket.onclose = function(evt){console.log("webSocket closed!");};
+        //如果连接失败，发送、接收数据失败或者处理数据出现错误，browser会触发onerror消息
+        socket.onerror = function(evt){console.log("WebSocket Error!");};
+
         // 点击Send按钮时的操作
         $('#send').on('click', function() {
             var nickname = $('#nickname').val();
@@ -129,7 +140,7 @@
             var messageItem = '<li class="am-comment '
                     + (message.isSelf ? 'am-comment-flip' : 'am-comment')
                     + '">'
-                    + '<a href="javascript:void(0)" ><img src="assets/images/'
+                    + '<a href="javascript:void(0)" ><img src="${ctx}/static/AmazeUI-2.5.0/images/'
                     + (message.isSelf ? 'self.png' : 'others.jpg')
                     + '" alt="" class="am-comment-avatar" width="48" height="48"/></a>'
                     + '<div class="am-comment-main"><header class="am-comment-hd"><div class="am-comment-meta">'
