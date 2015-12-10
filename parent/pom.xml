@@ -10,6 +10,7 @@
     <name>parent</name>
 
     <properties>
+        <jackson.version>2.6.4</jackson.version>
         <!-- Plugin的属性 -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -23,10 +24,29 @@
         <module>../spring</module>
         <module>../ldap</module>
         <module>../mongodb</module>
+        <module>../websocket</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
+            <!-- JSON begin -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-jaxb-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <!-- JSON end -->
+
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
