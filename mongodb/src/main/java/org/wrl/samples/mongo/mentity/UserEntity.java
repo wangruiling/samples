@@ -10,6 +10,7 @@ package org.wrl.samples.mongo.mentity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Arrays;
 import java.util.Date;
 
 @Document(collection = "user")
@@ -89,5 +90,18 @@ public class UserEntity {
         this.special = special;
     }
 
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id='" + id + '\'' +
+                ", name=" + name +
+                ", age=" + age +
+                ", works=" + works +
+                ", birth=" + birth +
+                ", password='" + password + '\'' +
+                ", regionName='" + regionName + '\'' +
+                ", special=" + Arrays.toString(special) +
+                '}';
+    }
 }
 
