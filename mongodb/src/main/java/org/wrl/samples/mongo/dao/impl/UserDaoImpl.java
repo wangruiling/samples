@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Repository;
 import org.wrl.samples.mongo.dao.IUserDao;
 import org.wrl.samples.mongo.mentity.UserEntity;
 
@@ -21,6 +22,7 @@ import java.util.Set;
  * @author: wangrl
  * @Date: 2015-12-01 15:14
  */
+@Repository("userDao")
 public class UserDaoImpl implements IUserDao {
     public static final Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
 

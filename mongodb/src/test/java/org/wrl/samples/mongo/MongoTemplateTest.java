@@ -27,5 +27,6 @@ public class MongoTemplateTest {
         c.setFirstName("wu");
         c.setLastName("wei");
         mongoTemplate.insert(c);
+        System.out.println(c);
     }
 }
