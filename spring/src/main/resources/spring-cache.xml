@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--spring提供EhCacheManagerFactoryBean来简化ehcache cacheManager的创建，这样注入configLocation，
+    会自动根据路径从classpath下找，比编码方式简单多了，然后就可以从spring容器获取cacheManager进行操作了-->
+    <bean id="ehcacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache.xml"/>
+    </bean>
+
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehcacheManager"/>
+        <!--此处的transactionAware表示是否事务环绕的，如果true，则如果事务回滚，缓存也回滚，默认false-->
+        <property name="transactionAware" value="true"/>
+    </bean>
+</beans>
