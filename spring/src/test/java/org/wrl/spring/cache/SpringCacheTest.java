@@ -1,9 +1,13 @@
 package org.wrl.spring.cache;
 
 import org.junit.Test;
+import org.springframework.cache.Cache;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by wrl on 2015/12/27.
@@ -28,6 +32,6 @@ public class SpringCacheTest {
         //往缓存写数据
         cache.put(id, user);
         //从缓存读数据
-        Assert.assertNotNull(cache.get(id, User.class));
+        assertThat(cache.get(id, User.class)).isNotNull();
     }
 }
