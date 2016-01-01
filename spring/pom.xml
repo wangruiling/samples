@@ -82,11 +82,6 @@
             <artifactId>spring-data-jpa</artifactId>
             <version>${spring-data-jpa.version}</version>
         </dependency>
-        <!-- spring cache -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-cache</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>net.sf.ehcache</groupId>

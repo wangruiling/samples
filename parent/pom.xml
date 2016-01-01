@@ -82,12 +82,8 @@
     </modules>
 
     <dependencyManagement>
+
         <dependencies>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-cache</artifactId>
-                <version>${springframework.version}</version>
-            </dependency>
             <dependency>
                 <groupId>net.sf.ehcache</groupId>
                 <artifactId>ehcache</artifactId>
