@@ -2,8 +2,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:cache="http://www.springframework.org/schema/cache"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+    <!--启用Cache注解-->
+    <cache:annotation-driven cache-manager="cacheManager" proxy-target-class="true"/>
 
     <!--spring提供EhCacheManagerFactoryBean来简化ehcache cacheManager的创建，这样注入configLocation，
     会自动根据路径从classpath下找，比编码方式简单多了，然后就可以从spring容器获取cacheManager进行操作了-->
