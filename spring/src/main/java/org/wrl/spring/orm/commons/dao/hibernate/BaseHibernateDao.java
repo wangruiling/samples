@@ -111,7 +111,7 @@ public abstract class BaseHibernateDao<M extends Serializable, PK extends Serial
 
     @Override
     public List<M> listAll() {
-        return list(getListAllHql());
+        return list(getListAllHql(), -1, -1, null);
     }
 
     @Override
@@ -119,9 +119,9 @@ public abstract class BaseHibernateDao<M extends Serializable, PK extends Serial
         return list(getListAllHql(), pn, pageSize);
     }
     
-    protected <T> List<T> list(final String hql, final Object... paramlist) {
-        return list(hql, -1, -1, paramlist);
-    }
+    //protected <T> List<T> list(final String hql, final Object... paramlist) {
+    //    return list(hql, -1, -1, paramlist);
+    //}
     
     /**
      * 通用列表查询,当pn<=-1 且 pageSize<=-1表示查询所有记录

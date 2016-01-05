@@ -1,5 +1,8 @@
 package org.wrl;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -7,6 +10,7 @@ import org.jsoup.select.Elements;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * @author: wangrl
@@ -16,18 +20,26 @@ public class JsonpTest {
 
     @Test
     public void testMain() throws IOException {
+
         String url = "";
         proceHtml(url);
+
     }
 
     private void proceHtml(String url) throws IOException {
-        Document doc = Jsoup.connect(url).get();
-        Element body = doc.body();
-        Elements divs = body.getElementsByAttributeValue("class", "tpc_content");
-        for (Element element : divs) {
-            System.out.println(element.text());
-            System.out.println("---------------------------------------------");
+        HttpEntity httpEntity = Request.Get(url).execute().returnResponse().getEntity();
+        if (httpEntity != null) {
+            String html = EntityUtils.toString(httpEntity, Charset.forName("gb2312"));
+            //System.out.println(html);
+            Document doc = Jsoup.parse(html);
+            Element body = doc.body();
+            Elements divs = body.getElementsByAttributeValue("class", "tpc_content");
+            for (Element element : divs) {
+                System.out.println(element.text());
+                System.out.println("---------------------------------------------");
+            }
         }
+
     }
 
 

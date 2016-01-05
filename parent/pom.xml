@@ -58,6 +58,7 @@
         <assertj.version>3.0.0</assertj.version>
         <jaxen.version>1.1.6</jaxen.version>
         <jsoup.version>1.8.3</jsoup.version>
+        <httpclient.version>4.4.1</httpclient.version>
         <dom4j.version>1.6.1</dom4j.version>
         <im4java.version>1.4.1-SNAPSHOT</im4java.version>
         <pinyin4j.version>2.5.0</pinyin4j.version>
@@ -133,15 +134,25 @@
             <dependency>
                 <groupId>org.springframework.data</groupId>
                 <artifactId>spring-data-commons</artifactId>
-                <version>${springframework.version}</version>
+                <version>${spring-data-commons.version}</version>
             </dependency>
             <!-- spring data jpa -->
             <dependency>
                 <groupId>org.springframework.data</groupId>
                 <artifactId>spring-data-jpa</artifactId>
-                <version>${springframework.version}</version>
+                <version>${spring-data-jpa.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>fluent-hc</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>net.sf.ehcache</groupId>
