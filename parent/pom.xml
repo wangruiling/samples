@@ -80,6 +80,7 @@
         <module>../ldap</module>
         <module>../mongodb</module>
         <module>../websocket</module>
+        <module>../quartz</module>
     </modules>
 
     <dependencyManagement>
