@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-fragment
+        xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-fragment_3_1.xsd"
+        version="3.1"
+        metadata-complete="true">
+
+    <name>MyFragment1</name>
+    <ordering>
+        <!--<after> 意味着文档必须被安排在指定在嵌套<name>元素的 name 匹配的文档之后-->
+        <after>
+            <name>MyFragment2</name>
+        </after>
+    </ordering>
+
+    <resource-ref>
+        <res-ref-name>foo</res-ref-name>
+        <injection-target>
+            <injection-target-class>org.wrl.websocket.chat.ChatServer</injection-target-class>
+            <injection-target-name>baz</injection-target-name>
+        </injection-target>
+    </resource-ref>
+</web-fragment>

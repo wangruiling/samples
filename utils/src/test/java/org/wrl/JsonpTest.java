@@ -18,20 +18,21 @@ import java.nio.charset.Charset;
  */
 public class JsonpTest {
 
+
     @Test
     public void testMain() throws IOException {
 
-        String url = "";
+        String url = "http://t66y.com/read.php?tid=1784155&fpage=0&toread=&page=13";
         proceHtml(url);
 
     }
 
     private void proceHtml(String url) throws IOException {
+
         HttpEntity httpEntity = Request.Get(url).execute().returnResponse().getEntity();
         if (httpEntity != null) {
             String html = EntityUtils.toString(httpEntity, Charset.forName("gb2312"));
-            //System.out.println(html);
-            Document doc = Jsoup.parse(html);
+            Document doc = Jsoup.parse(html, "gb2312");
             Element body = doc.body();
             Elements divs = body.getElementsByAttributeValue("class", "tpc_content");
             for (Element element : divs) {

@@ -5,5 +5,40 @@
         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
         metadata-complete="false"
         version="3.1">
-  <display-name>Archetype Created Web Application</display-name>
+
+    <display-name>Archetype Created Web Application</display-name>
+
+    <!--<absolute-ordering>-->
+        <!--<name>MyFragment3</name>-->
+        <!--<name>MyFragment2</name>-->
+    <!--</absolute-ordering>-->
+
+    <servlet>
+        <servlet-name>string</servlet-name>
+        <servlet-class>org.wrl.websocket.chat.ChatServer</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>string</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>filter</filter-name>
+        <filter-class>org.wrl.websocket.chat.ChatServer</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>filter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+    <jsp-config>
+    </jsp-config>
+
+
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.htm</welcome-file>
+    </welcome-file-list>
 </web-app>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-fragment
+        xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-fragment_3_1.xsd"
+        version="3.1"
+        metadata-complete="true">
+
+    <name>MyFragment3</name>
+    <ordering>
+        <!--<before> 意味着文档必须被安排在指定在嵌套<name>元素的 name 匹配的文档之前-->
+        <!--在<before> 或 <after>可以包括特殊的<others/>元素零次或一次，或直接包括在<absolute-ordering>元素中零次或一次。-->
+        <before>
+            <!--<others/>元素必须作如下处理-->
+            <others/>
+        </before>
+    </ordering>
+</web-fragment>
