@@ -8,6 +8,16 @@
 
     <display-name>Archetype Created Web Application</display-name>
 
+    <!--Web 应用程序部署描述文件（见第 14 章， “部署描述文件”）的配置和部署信息包括以下几种类型:-->
+    <!--■ ServletContext 的初始化参数-->
+    <!--■ Session 配置-->
+    <!--■ Servlet/JSP 的定义-->
+    <!--■ Servlet JSP 的映射-->
+    <!--■ MIME 类型映射-->
+    <!--■ 欢迎文件列表-->
+    <!--■ 错误页面-->
+    <!--■ 安全-->
+
     <!--<absolute-ordering>-->
         <!--<name>MyFragment3</name>-->
         <!--<name>MyFragment2</name>-->

@@ -21,6 +21,10 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
         <!-- JSON begin -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -36,6 +40,16 @@
         </dependency>
         <!-- JSON end -->
 
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.3.6.v20151106</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>9.3.6.v20151106</version>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
