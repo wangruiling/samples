@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+          http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+          http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+
+
+    <description>spring下quartz的持久化(Quartz 使用集群)</description>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+        <property name="username" value="store"/>
+        <property name="password" value="server1db"/>
+        <property name="url" value="jdbc:mysql://192.168.1.5:3306/quartz"/>
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+    </bean>
+
+    <!-- 启动触发器的配置开始 -->
+    <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <!--项目中用到的数据源，里面包含了quartz用到的11张数据库表-->
+        <property name="dataSource" ref="dataSource"/>
+
+        <!--configLocation：用于指明quartz的配置文件的位置-->
+        <!--<property name="configLocation" value="classpath:quartz.properties"/>-->
+        <!--也可以把quartz.properties配置文件写入到配置XML中-->
+        <property name="quartzProperties">
+            <props>
+                <!--instanceName属性可为任何值，用在 JDBC JobStore 中来唯一标识实例，但是所有集群节点中必须相同-->
+                <prop key="org.quartz.scheduler.instanceName">quartzScheduler</prop>
+                <!--instanceId　属性为 AUTO即可，基于主机名和时间戳来产生实例 ID-->
+                <prop key="org.quartz.scheduler.instanceId">AUTO</prop>
+                <!--jobStore.class属性为JobStoreTX，将任务持久化到数据中。因为集群中节点依赖于数据库来传播 Scheduler 实例的状态，
+                你只能在使用 JDBC JobStore 时应用 Quartz 集群。这意味着你必须使用 JobStoreTX 或是 JobStoreCMT 作为 Job 存储；你不能在集群中使用 RAMJobStore-->
+                <!--如果你不需要绑定其他事务处理，你可以选择quartz的事务，其通过JobStoreTX来管理，这也是常用的选择，当然如果你要和你的应用容器一起管理，
+                那你可以使用quartz的JobStoreCMT，quartz通过JobStoreCMT来的使用来让你的应用容器管理quartz的事务-->
+                <prop key="org.quartz.jobStore.class">org.quartz.impl.jdbcjobstore.JobStoreTX</prop>
+                <!--isClustered 属性为 true，你就告诉了 Scheduler 实例要它参与到一个集群当中。这一属性会贯穿于调度框架的始终，用于修改集群环境中操作的默认行为-->
+                <prop key="org.quartz.jobStore.isClustered">true</prop>
+                <prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
+                <prop key="org.quartz.threadPool.threadCount">3</prop>
+                <prop key="org.quartz.threadPool.threadPriority">5</prop>
+                <prop key="org.quartz.jobStore.misfireThreshold">60000</prop>
+                <prop key="org.quartz.jobStore.driverDelegateClass">org.quartz.impl.jdbcjobstore.MSSQLDelegate </prop>
+                <prop key="org.quartz.jobStore.selectWithLockSQL">SELECT * FROM {0}LOCKS WHERE LOCK_NAME = ?</prop>
+                <prop key="org.quartz.jobStore.tablePrefix">QRTZ_</prop>
+                <!--clusterCheckinInterval 属性定义了Scheduler 实例检入到数据库中的频率(单位：毫秒)。Scheduler 检查是否其他的实例到了它们应当检入的时候未检入；这能指出一个失败的 Scheduler 实例，且当前 Scheduler 会以此来接管任何执行失败并可恢复的 Job。通过检入操作，Scheduler 也会更新自身的状态记录。clusterChedkinInterval 越小，Scheduler 节点检查失败的 Scheduler 实例就越频繁。默认值是 15000 (即15 秒)。-->
+                <prop key="org.quartz.jobStore.clusterCheckinInterval">20000</prop>
+            </props>
+        </property>
+
+        <!--是SchedulerFactoryBean这个类中把spring上下文以key/value的方式存放在了quartz的上下文中了，可以用applicationContextSchedulerContextKey所定义的key得到对应的spring上下文-->
+        <property name="applicationContextSchedulerContextKey" value="applicationContextKey"/>
+        <property name="autoStartup" value="true"/>
+
+        <property name="triggers">
+            <list>
+                <ref bean="trigger1"/>
+                <ref bean="trigger2"/>
+            </list>
+        </property>
+    </bean>
+    <!-- 启动触发器的配置结束 -->
+
+    <bean id="simpleService" class="org.wrl.quartz.spring.demo2.SimpleService"/>
+
+    <!-- 集成方式：JobDetailFactoryBean，并且任务类需要继承QuartzJobBean-->
+    <!-- 定义jobDetail -->
+    <bean id="jobDetail1" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <!--目标类-->
+        <property name="jobClass" value="org.wrl.quartz.spring.demo2.SimpleService"/>
+        <!-- durability 表示任务完成之后是否依然保留到数据库，默认false   -->
+        <property name="durability" value="false"/>
+    </bean>
+    <bean id="trigger1" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="jobDetail1"/>
+        <property name="cronExpression" value="0/5 * * ? * * *"/>
+    </bean>
+
+    <bean id="jobDetail2" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="org.wrl.quartz.spring.demo2.SimpleService"/>
+        <!--shouldRecover属性必须设置为 true，当Quartz服务被中止后，再次启动或集群中其他机器接手任务时会尝试恢复执行之前未完成的所有任务。-->
+        <!--<property name="shouldRecover" value="true"/>-->
+    </bean>
+    <bean id="trigger2" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="jobDetail2"/>
+        <property name="startDelay" value="1"/>
+        <property name="repeatCount" value="100"/>
+        <property name="repeatInterval" value="1000"/>
+    </bean>
+</beans>

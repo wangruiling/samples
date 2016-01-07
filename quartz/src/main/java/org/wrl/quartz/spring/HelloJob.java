@@ -1,22 +1,20 @@
 package org.wrl.quartz.spring;
 
-import java.time.LocalDateTime;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 
 /**
  * 创建一个简单的任务调度
  * @author: wangrl
  * @Date: 2016-01-06 16:49
  */
-public class HelloJob {
+public class HelloJob extends QuartzJobBean{
     private String name;
 
-    /**
-     * 这个方法中是我们需要任务调度执行的具体内容
-     */
-    public void execute() {
-        //JobDataMap jobDataMap = jobExecutionContext.getMergedJobDataMap();
-        //String name = jobDataMap.getString("name");
-        System.out.println("hello " + name + ", " + LocalDateTime.now());
+    @Override
+    protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+
     }
 
     public String getName() {

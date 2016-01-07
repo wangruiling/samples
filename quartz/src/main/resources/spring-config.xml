@@ -17,8 +17,8 @@
           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
 
-    <!--工作的bean-->
-    <bean id="helloJob" class="org.wrl.quartz.spring.HelloJob"/>
+    <!--工作的bean(短信催还提醒任务调度)-->
+    <bean id="overdueRecall" class="org.wrl.quartz.spring.demo1.OverdueRecallTimerTask"/>
 
     <!--
     job的配置开始:
@@ -26,8 +26,8 @@
     属性targetMethod:指定执行任务的方法,该方法必须是无参方法
     -->
     <bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="helloJob" />
-        <property name="targetMethod" value="execute" />
+        <property name="targetObject" ref="overdueRecall" />
+        <property name="targetMethod" value="overdueRecall" />
         <!-- false表示job不会并发执行，默认为true-->
         <property name="concurrent" value="true"/>
     </bean>
@@ -47,6 +47,8 @@
                 <ref bean="cronTrigger" />
             </list>
         </property>
+        <property name="schedulerName" value="mySchedulerName"/>
     </bean>
     <!-- 启动触发器的配置结束 -->
+
 </beans>
