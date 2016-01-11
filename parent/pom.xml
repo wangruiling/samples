@@ -82,6 +82,7 @@
         <module>../mongodb</module>
         <module>../websocket</module>
         <module>../quartz</module>
+        <module>../servlet3</module>
     </modules>
 
     <dependencyManagement>
