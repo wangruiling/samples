@@ -117,7 +117,7 @@
         <!--requestsRecovery属性为true，则当Quartz服务被中止后，再次启动或集群中其他机器接手任务时会尝试恢复执行之前未完成的所有任务-->
         <property name="requestsRecovery" value="false"/>
         <!-- durability 表示任务完成之后是否依然保留到数据库，默认false   -->
-        <property name="durability" value="false"/>
+        <property name="durability" value="true"/>
     </bean>
     <bean id="trigger1" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="name" value="myTrigger"/>
@@ -135,4 +135,17 @@
         <property name="repeatCount" value="100"/>
         <property name="repeatInterval" value="1000"/>
     </bean>
+
+    <!-- 常用的corn表达式
+    *隔5秒执行一次：*/5 * * * * ?
+    *隔1分钟执行一次：0 */1 * * * ?
+    *23点执行一次：0 0 23 * * ?
+    *晨1点执行一次：0 0 1 * * ?
+    *晨1点30执行一次：0 30 1 ? * *
+    *月1号凌晨1点执行一次：0 0 1 1 * ?
+    *月最后一天23点执行一次：0 0 23 L * ?
+    *周星期天凌晨1点实行一次：0 0 1 ? * L
+    *在26分、29分、33分执行一次：0 26,29,33 * * * ?
+    *的0点、13点、18点、21点都执行一次：0 0 0,13,18,21 * * ?
+    -->
 </beans>

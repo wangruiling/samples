@@ -3,37 +3,54 @@ package org.wrl.quartz.demo;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
+import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
+import static org.quartz.TriggerBuilder.newTrigger;
+
 /**
+ * 当调用StdSchedulerFactory.getDefaultScheduler()获取scheduler实例对象后，在调用scheduler.shutdown()之前，scheduler不会终止，因为还有活跃的线程在执行
  * @author: wangrl
  * @Date: 2016-01-06 16:55
  */
 public class JobStart {
     public static void main(String[] args) throws SchedulerException {
+        try {
+            //获取Scheduler
+            // Grab the Scheduler instance from the Factory
+            Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+
+            //添加job
+            addJob(scheduler);
+
+            //启动job
+            scheduler.start();
+
+            //停止scheduler
+            //scheduler.shutdown();
+
+        } catch (SchedulerException se) {
+            se.printStackTrace();
+        }
+    }
+
+    private static void addJob(Scheduler scheduler) throws SchedulerException {
         //1、首先，创建JobDetail
-        JobDetail jobDetail = JobBuilder.newJob(HelloJob.class)
-                .withIdentity("helloJob", "group1")
-                .usingJobData("name", "wangrl")
+        // define the job and tie it to our HelloJob class
+        JobDetail job = JobBuilder.newJob(HelloJob.class)
+                .withIdentity("job1", "group1")
                 .build();
 
         //2、然后，创建Trigger：
-        Trigger trigger = TriggerBuilder.newTrigger()
-                .withIdentity("myTrigger","group1")
+        // Trigger the job to run now, and then repeat every 40 seconds
+        Trigger trigger = newTrigger()
+                .withIdentity("trigger1", "group1")
                 .startNow()
-                .withSchedule(
-                        SimpleScheduleBuilder.simpleSchedule()
-                                //每5s运行一次
-                                .withIntervalInSeconds(5)
-                                //重复运行3次
-                                .withRepeatCount(3)
-                ).build();
+                .withSchedule(simpleSchedule()
+                        .withIntervalInSeconds(40)
+                        .repeatForever())
+                .build();
 
-        //3、最后，获取Scheduler，并启动任务
-        SchedulerFactory schedulerFactory = new StdSchedulerFactory();
-        Scheduler scheduler = schedulerFactory.getScheduler();
-        //添加job，以及其关联的trigger
-        scheduler.scheduleJob(jobDetail, trigger);
-
-        //启动job
-        scheduler.start();
+        //3、添加job，以及其关联的trigger
+        // Tell quartz to schedule the job using our trigger
+        scheduler.scheduleJob(job, trigger);
     }
 }
