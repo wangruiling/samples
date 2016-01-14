@@ -11,9 +11,15 @@
     <title>文件上传</title>
 </head>
 <body>
-<form method="post" action="servlet/upload" enctype="multipart/form-data">
-    <input type="file" name="upload"/>
-    <input type="submit" value="upload"/>
+<form method="post" action="${pageContext.request.contextPath}/upload" enctype="multipart/form-data">
+    name:<input type="text" name="name"><br/>
+
+    file1: <input type="file" name="file1"><br/>
+
+    file2: <input type="file" name="file2"><br/>
+    file2: <input type="file" name="file2"><br/>
+
+    <input type="submit" value="上传">
 </form>
 </body>
 </html>
