@@ -43,7 +43,11 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>fluent-hc</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+            <version>[7.0.0, 7.0.99]</version>
+        </dependency>
 
         <!-- LOGGING begin -->
         <!-- 日志实现使用log4j2 -->

@@ -16,6 +16,7 @@ public class CreateSessionServlet extends HttpServlet {
 
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("requestedSessionId:" + req.getRequestedSessionId());
         System.out.println("create session, id : " + req.getSession().getId());
     }
 }
