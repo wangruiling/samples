@@ -25,8 +25,10 @@ public class Qiniu {
     public static void main(String[] args) {
         Qiniu qiniu = new Qiniu();
         String token = qiniu.getUpToken0("lanniuzai");
-        qiniu.put(new File("D:/simephoto/Upload_batch_04_11_2015/ATL-461979_3.jpg"), "蓝牛仔-ATL-461979_3.jpg", token, null, "image/jpeg", false);
         System.out.println(qiniu.getUpToken0("lanniuzai"));
+        StringMap map = new StringMap();
+        map.put("returnUrl", "http://img2.lanniuzai.com/蓝牛仔-FCR-456182_3.jpg");
+        qiniu.put(new File("D:/simephoto/Upload_batch_04_11_2015/FCR-456182_3.jpg"), "蓝牛仔-FCR-456182_3.jpg", token, null, "image/jpeg", false);
 
     }
 
@@ -57,7 +59,6 @@ public class Qiniu {
 
     /**
      * 上传数据
-     *
      * @param data     上传的数据 byte[]、File、filePath
      * @param key      上传数据保存的文件名
      * @param token    上传凭证
