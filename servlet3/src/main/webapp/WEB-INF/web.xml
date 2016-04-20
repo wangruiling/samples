@@ -8,4 +8,17 @@
   <display-name>Archetype Created Web Application</display-name>
 
 
+
+    <servlet>
+        <servlet-name>MyJspInit</servlet-name>
+        <jsp-file>/jspInit.jsp</jsp-file>
+        <init-param>
+            <param-name>email</param-name>
+            <param-value>ikickedbutt@wickedlysmart.com</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MyJspInit</servlet-name>
+        <url-pattern>/jspInit.jsp</url-pattern>
+    </servlet-mapping>
 </web-app>
