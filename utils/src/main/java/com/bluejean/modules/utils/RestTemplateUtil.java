@@ -10,12 +10,13 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,6 +24,7 @@ import java.lang.invoke.MethodHandles;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -33,7 +35,14 @@ public class RestTemplateUtil {
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static RestTemplate restTemplate;
 
+    private RestTemplateUtil() {
+    }
+
     static {
+        initRestTemplate();
+    }
+
+    private static void initRestTemplate() {
         // 长连接保持30秒
         PoolingHttpClientConnectionManager pollingConnectionManager = new PoolingHttpClientConnectionManager(30, TimeUnit.SECONDS);
         // 总连接数
@@ -81,7 +90,7 @@ public class RestTemplateUtil {
         List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
         messageConverters.add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
         messageConverters.add(new FormHttpMessageConverter());
-        messageConverters.add(new MappingJackson2XmlHttpMessageConverter());
+        //messageConverters.add(new MappingJackson2XmlHttpMessageConverter());
         messageConverters.add(new MappingJackson2HttpMessageConverter());
 
         restTemplate = new RestTemplate(messageConverters);
@@ -91,9 +100,62 @@ public class RestTemplateUtil {
         logger.info("RestClient初始化完成");
     }
 
-    private RestTemplateUtil() { }
+    public static <T> T doGet(String url, Class<T> responseType) {
+        ResponseEntity<T> responseEntity = getRestTemplate().getForEntity(url, responseType);
+        if (responseEntity != null) {
+            logger.info("statusCode:{}", responseEntity.getStatusCode());
+            return responseEntity.getBody();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 注意：delete方法没有返回值
+     * @param url
+     */
+    public static void doDelete(String url) {
+        getRestTemplate().delete(url);
+    }
+
+    public static <T> T doPost(String url, Class<T> responseType){
+        return doPost(url, null, responseType);
+    }
+
+    public static <T> T doPost(String url, Object requestBody, Class<T> responseType) {
+        ResponseEntity<T> responseEntity = getRestTemplate().postForEntity(url, requestBody, responseType);
+        if (responseEntity != null) {
+            logger.info("statusCode:{}", responseEntity.getStatusCode());
+            return responseEntity.getBody();
+        } else {
+            return null;
+        }
+    }
+
+    public static <T> T doPut(String url, Class<T> responseType) {
+        return doPut(url, responseType, null);
+    }
+
+    public static <T> T doPut(String url, Class<T> responseType, Map<String, ?> uriVariables) {
+        ResponseEntity<T> responseEntity;
+        if (uriVariables == null || uriVariables.size() <= 0) {
+            responseEntity = getRestTemplate().exchange(url, HttpMethod.PUT, null, responseType);
+        } else {
+            responseEntity = getRestTemplate().exchange(url, HttpMethod.PUT, null, responseType, uriVariables);
+        }
+
+        if (responseEntity != null) {
+            logger.info("statusCode:{}", responseEntity.getStatusCode());
+            return responseEntity.getBody();
+        } else {
+            return null;
+        }
+    }
 
     public static RestTemplate getRestTemplate() {
+        if (restTemplate == null) {
+            initRestTemplate();
+        }
         return restTemplate;
     }
 }
