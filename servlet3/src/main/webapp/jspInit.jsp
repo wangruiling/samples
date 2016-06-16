@@ -22,5 +22,11 @@
 %>
 Email is:
 <%= pageContext.findAttribute("mail")%>
+</br>
+el表达式:
+${applicationScope.mail}
+<br>
+等价表达式:<%= application.getAttribute("mail")%>
+<jsp:getProperty name="" property=""
 </body>
 </html>
