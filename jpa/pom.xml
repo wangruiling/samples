@@ -60,6 +60,14 @@
             <version>3.7.3</version>
         </dependency>
 
+        <!-- http://mvnrepository.com/artifact/com.h2database/h2 -->
+        <!-- H2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.192</version>
+        </dependency>
+
         <!-- HSQL -->
         <dependency>
             <groupId>org.hsqldb</groupId>
