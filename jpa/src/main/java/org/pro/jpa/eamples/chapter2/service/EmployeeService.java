@@ -7,7 +7,6 @@ import java.util.Collection;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-
 public class EmployeeService {
     protected EntityManager em;
 
