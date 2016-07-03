@@ -18,7 +18,19 @@ import javax.persistence.*;
         @NamedQuery(name="Employee.findByPrimaryKey",
                 query="SELECT e FROM Employee e WHERE e.id = :id"),
         @NamedQuery(name="Employee.findByName",
-                query="SELECT e FROM Employee e WHERE e.name = :name")
+                query="SELECT e FROM Employee e WHERE e.name = :name"),
+        @NamedQuery(name="findEmployeesAboveSal",
+                query="SELECT e " +
+                        "FROM Employee e " +
+                        "WHERE e.department = :dept AND " +
+                        "      e.salary > :sal"),
+        @NamedQuery(name="findHighestPaidByDepartment",
+                query="SELECT e " +
+                        "FROM Employee e " +
+                        "WHERE e.department = :dept AND " +
+                        "      e.salary = (SELECT MAX(e2.salary) " +
+                        "                  FROM Employee e2 " +
+                        "                  WHERE e2.department = :dept)")
 })
 public class Employee {
     @Id
@@ -41,8 +53,8 @@ public class Employee {
     private Collection<Project> projects;
 
     public Employee() {
-        projects = new ArrayList<Project>();
-        directs = new ArrayList<Employee>();
+        projects = new ArrayList<>();
+        directs = new ArrayList<>();
     }
 
     public int getId() {
@@ -60,11 +72,19 @@ public class Employee {
     public Date getStartDate() {
         return startDate;
     }
-    
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
     public Department getDepartment() {
         return department;
     }
-    
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
     public Collection<Employee> getDirects() {
         return directs;
     }

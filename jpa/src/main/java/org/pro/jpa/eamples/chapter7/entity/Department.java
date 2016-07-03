@@ -16,13 +16,17 @@ public class Department {
     private Collection<Employee> employees;
 
     public Department() {
-        employees = new ArrayList<Employee>();
+        employees = new ArrayList<>();
     }
     
     public int getId() {
         return id;
     }
-    
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }

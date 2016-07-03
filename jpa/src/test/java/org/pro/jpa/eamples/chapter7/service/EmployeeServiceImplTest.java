@@ -3,6 +3,7 @@ package org.pro.jpa.eamples.chapter7.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.pro.jpa.eamples.BaseServiceTest;
+import org.pro.jpa.eamples.chapter7.entity.Department;
 import org.pro.jpa.eamples.chapter7.entity.Employee;
 
 import java.util.Collection;
@@ -46,4 +47,22 @@ public class EmployeeServiceImplTest extends BaseServiceTest {
         System.out.println(employees);
     }
 
+    @Test
+    public void findEmployeesAboveSal() {
+        Department dept = new Department();
+        dept.setId(2);
+        long minSal = 5300;
+        Collection<Employee> employees = employeeService.findEmployeesAboveSal(dept, minSal);
+        System.out.println(employees);
+    }
+
+    @Test
+    public void findEmployeesHiredDuringPeriod() {
+
+    }
+
+    @Test
+    public void findHighestPaidByDepartment() {
+
+    }
 }
