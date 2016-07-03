@@ -5,6 +5,7 @@ import org.pro.jpa.eamples.chapter7.entity.Employee;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -80,5 +81,25 @@ public class EmployeeServiceImpl implements EmployeeService {
         } catch (NoResultException e) {
             return null;
         }
+    }
+
+    /******************* 返回特殊结果类型 *****************/
+
+    public List findProjectEmployees(String projectName) {
+        return em.createQuery("SELECT e.name, e.department.name " +
+                "FROM Project p JOIN p.employees e " +
+                "WHERE p.name = :project " +
+                "ORDER BY e.name")
+                .setParameter("project", projectName)
+                .getResultList();
+    }
+
+    public List findProjectEmployeesWithConstructor(String projectName) {
+        return em.createQuery("SELECT NEW org.pro.jpa.eamples.chapter7.EmpMenu(e.name, e.department.name) " +
+                "FROM Project p JOIN p.employees e " +
+                "WHERE p.name = :project " +
+                "ORDER BY e.name")
+                .setParameter("project", projectName)
+                .getResultList();
     }
 }
