@@ -23,7 +23,7 @@ public class EmployeeServiceTest {
 
     @BeforeClass
     public static void setUp() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmployeeService");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("LocalPersistenceUnit");
         em = emf.createEntityManager();
         employeeService = new EmployeeService(em);
     }

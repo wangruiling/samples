@@ -11,8 +11,8 @@
 
     <properties>
         <!-- 主要依赖库的版本定义 -->
-        <springframework.version>4.2.6.RELEASE</springframework.version>
-        <hibernate.version>5.2.0.Final</hibernate.version>
+        <springframework.version>4.3.0.RELEASE</springframework.version>
+        <hibernate.version>5.2.1.Final</hibernate.version>
         <spring-data-commons.version>1.12.1.RELEASE</spring-data-commons.version>
         <spring-data-jpa.version>1.10.1.RELEASE</spring-data-jpa.version>
         <spring-data-elasticsearch.version>2.0.1.RELEASE</spring-data-elasticsearch.version>

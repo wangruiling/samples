@@ -13,10 +13,11 @@ import javax.persistence.Persistence;
  */
 public class BaseServiceTest {
     protected static EntityManager em;
+    protected static EntityManagerFactory emf;
 
     @BeforeClass
     public static void setUp() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmployeeService");
+        emf = Persistence.createEntityManagerFactory("LocalPersistenceUnit");
         em = emf.createEntityManager();
     }
 

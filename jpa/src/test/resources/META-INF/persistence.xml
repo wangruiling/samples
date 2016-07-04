@@ -1,9 +1,18 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
-    <persistence-unit name="EmployeeService" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="LocalPersistenceUnit" transaction-type="RESOURCE_LOCAL">
         <!--<class>org.pro.jpa.eamples.chapter2.entity.Employee</class>-->
-        <class>org.pro.jpa.eamples.chapter7.entity.Employee</class>
-        <class>org.pro.jpa.eamples.chapter7.entity.Project</class>
-        <class>org.pro.jpa.eamples.chapter7.entity.Department</class>
+
+        <!--<class>org.pro.jpa.eamples.chapter7.entity.Employee</class>-->
+        <!--<class>org.pro.jpa.eamples.chapter7.entity.Project</class>-->
+        <!--<class>org.pro.jpa.eamples.chapter7.entity.Department</class>-->
+
+        <class>org.pro.jpa.eamples.chapter8.entity.Employee</class>
+        <class>org.pro.jpa.eamples.chapter8.entity.Department</class>
+        <class>org.pro.jpa.eamples.chapter8.entity.Address</class>
+        <class>org.pro.jpa.eamples.chapter8.entity.DesignProject</class>
+        <class>org.pro.jpa.eamples.chapter8.entity.Phone</class>
+        <class>org.pro.jpa.eamples.chapter8.entity.Project</class>
+        <class>org.pro.jpa.eamples.chapter8.entity.QualityProject</class>
 
 		<properties>
             <!--<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>-->
