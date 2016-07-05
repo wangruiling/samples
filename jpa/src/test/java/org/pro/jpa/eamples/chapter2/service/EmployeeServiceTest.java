@@ -11,6 +11,8 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -23,7 +25,10 @@ public class EmployeeServiceTest {
 
     @BeforeClass
     public static void setUp() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("LocalPersistenceUnit");
+        Map configOverrides = new HashMap();
+        configOverrides.put("hibernate.show_sql", true);
+
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("LocalPersistenceUnit", configOverrides);
         em = emf.createEntityManager();
         employeeService = new EmployeeService(em);
     }

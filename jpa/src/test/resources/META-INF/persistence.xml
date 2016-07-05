@@ -1,5 +1,30 @@
-<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
+
+    <!--Name属性用于定义持久化单元的名字 (name必选,空值也合法);
+        transaction-type 指定事务类型(可选)local的还是global(JTA)的事务， JTA 、RESOURCE_LOCAL-->
     <persistence-unit name="LocalPersistenceUnit" transaction-type="RESOURCE_LOCAL">
+
+        <!-- 描述信息.(可选) -->
+        <description/>
+
+        <!--javax.persistence.PersistenceProvider接口的一个实现类(可选)-->
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <!-- Jta-data-source和 non-jta-data-source用于分别指定持久化提供商使用的JTA和/或non-JTA数据源的全局JNDI名称(可选) -->
+        <!--<jta-data-source>java:/MySqlDS</jta-data-source>-->
+        <!--<non-jta-data-source> </non-jta-data-source>-->
+
+        <!-- 声明orm.xml所在位置.(可选) -->
+        <!--<mapping-file>product.xml</mapping-file>-->
+
+        <!-- 以包含persistence.xml的jar文件为基准的相对路径,添加额外的jar文件.(可选) -->
+        <!--<jar-file>../lib/model.jar</jar-file>-->
+
+        <!--显式列出实体类,在Java SE 环境中应该显式列出.(可选)-->
         <!--<class>org.pro.jpa.eamples.chapter2.entity.Employee</class>-->
 
         <!--<class>org.pro.jpa.eamples.chapter7.entity.Employee</class>-->
@@ -14,14 +39,22 @@
         <class>org.pro.jpa.eamples.chapter8.entity.Project</class>
         <class>org.pro.jpa.eamples.chapter8.entity.QualityProject</class>
 
-		<properties>
+        <!-- 声明是否扫描jar文件中标注了@Enity类加入到上下文.若不扫描,则如下:(可选) -->
+        <!--<exclude-unlisted-classes/>-->
+
+        <!--厂商专有属性(可选)-->
+        <properties>
             <!--<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>-->
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/D:/tools/h2/database/EmpServDB"/>
-            <!--<property name="javax.persistence.jdbc.user" value="APP"/>-->
-            <!--<property name="javax.persistence.jdbc.password" value="APP"/>-->
             <!-- enable this property to see SQL and other logging -->
             <!-- property name="eclipselink.logging.level" value="FINE"/ -->
+
+            <!-- 数据库方言 -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+            <!--<property name="hibernate.hbm2ddl.auto" value="update" />-->
+            <!--<property name="hibernate.show_sql" value="true" />-->
+            <!--<property name="hibernate.format_sql" value="true" />-->
 
         </properties>
     </persistence-unit>

@@ -140,5 +140,36 @@ public class ComposeServiceTest extends BaseServiceTest{
         service.executeAndPrintQuery("SELECT e.name, VALUE(p) FROM Employee e JOIN e.phones p", out);
     }
 
+    @Test
+    public void executeAndPrintQuery183() throws Exception {
+        //映射联接，下列查询枚举所有员工的电话号码
+        service.executeAndPrintQuery("SELECT e.name, KEY(p), VALUE(p) FROM Employee e JOIN e.phones p WHERE KEY(p) IN('Work', 'Cell')", out);
+    }
+
+    @Test
+    public void executeAndPrintQuery19() throws Exception {
+        service.executeAndPrintQuery("SELECT e, d FROM Employee e LEFT JOIN e.department d", out);
+    }
+
+    @Test
+    public void executeAndPrintQuery20() throws Exception {
+        service.executeAndPrintQuery("SELECT e FROM Employee e JOIN FETCH e.address", out);
+    }
+
+    @Test
+    public void executeAndPrintQuery21() throws Exception {
+        service.executeAndPrintQuery("SELECT e, a FROM Employee e JOIN e.address a", out);
+    }
+
+    @Test
+    public void executeAndPrintQuery22() throws Exception {
+        service.executeAndPrintQuery("SELECT d FROM Department d LEFT JOIN FETCH d.employees", out);
+    }
+
+    @Test
+    public void executeAndPrintQuery23() throws Exception {
+        service.executeAndPrintQuery("SELECT d, e FROM Department d LEFT JOIN d.employees e", out);
+    }
+
 
 }
