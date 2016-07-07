@@ -40,6 +40,13 @@ public class Employee {
     @ManyToMany(mappedBy="employees")
     private Collection<Project> projects = new ArrayList<Project>();
 
+    public Employee(int id) {
+        this.id = id;
+    }
+
+    public Employee() {
+    }
+
     public int getId() {
         return id;
     }
