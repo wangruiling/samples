@@ -11,10 +11,10 @@
 
     <properties>
         <!-- 主要依赖库的版本定义 -->
-        <springframework.version>4.3.0.RELEASE</springframework.version>
+        <springframework.version>4.3.1.RELEASE</springframework.version>
         <hibernate.version>5.2.1.Final</hibernate.version>
-        <spring-data-commons.version>1.12.1.RELEASE</spring-data-commons.version>
-        <spring-data-jpa.version>1.10.1.RELEASE</spring-data-jpa.version>
+        <spring-data-commons.version>1.12.2.RELEASE</spring-data-commons.version>
+        <spring-data-jpa.version>1.10.2.RELEASE</spring-data-jpa.version>
         <spring-data-elasticsearch.version>2.0.1.RELEASE</spring-data-elasticsearch.version>
         <spring-data-redis.version>1.7.1.RELEASE</spring-data-redis.version>
         <spring-batch.version>3.0.5.RELEASE</spring-batch.version>
@@ -25,7 +25,7 @@
         <hibernate-validator.version>5.1.1.Final</hibernate-validator.version>
         <jsonpath.version>0.9.1</jsonpath.version>
         <tomcat-jdbc.version>8.0.5</tomcat-jdbc.version>
-        <druid.version>1.0.16</druid.version>
+        <druid.version>1.0.21</druid.version>
         <mysql-jdbc-driver.version>5.1.38</mysql-jdbc-driver.version>
         <aspectj.version>1.8.0</aspectj.version>
         <commons-io.version>2.4</commons-io.version>
@@ -173,6 +173,12 @@
                 <!--<scope>provided</scope>-->
             </dependency>
 
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
             <!--servlet-->
             <dependency>
                 <groupId>javax.servlet</groupId>
@@ -214,11 +220,6 @@
                 <version>2.10.1</version>
             </dependency>
 
-            <dependency>
-                <groupId>net.sf.ehcache</groupId>
-                <artifactId>ehcache</artifactId>
-                <version>2.10.1</version>
-            </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
