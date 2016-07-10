@@ -11,7 +11,7 @@
         <!-- 描述信息.(可选) -->
         <description/>
 
-        <!--javax.persistence.PersistenceProvider接口的一个实现类(可选)-->
+        <!--javax.persistence.spi.PersistenceProvider接口的一个实现类(可选)定义持久化服务提供程序.如下显示定义了Hibernate提供程序类-->
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
         <!-- Jta-data-source和 non-jta-data-source用于分别指定持久化提供商使用的JTA和/或non-JTA数据源的全局JNDI名称(可选) -->
@@ -19,7 +19,9 @@
         <!--<non-jta-data-source> </non-jta-data-source>-->
 
         <!-- 声明orm.xml所在位置.(可选) -->
-        <!--<mapping-file>product.xml</mapping-file>-->
+        <!--<mapping-file>orm.xml</mapping-file>-->
+        <!--<mapping-file>META-INF/service_entities.xml</mapping-file>-->
+        <!--<mapping-file>META-INF/service_queries.xml</mapping-file>-->
 
         <!-- 以包含persistence.xml的jar文件为基准的相对路径,添加额外的jar文件.(可选) -->
         <!--<jar-file>../lib/model.jar</jar-file>-->
@@ -42,8 +44,21 @@
         <!-- 声明是否扫描jar文件中标注了@Enity类加入到上下文.若不扫描,则如下:(可选) -->
         <!--<exclude-unlisted-classes/>-->
 
-        <!--厂商专有属性(可选)-->
+        <!--共享缓存模式(可选):UNSPECIFIED、ALL、NONE、DISABLE_SELECTED、ENABLE_SELECTED-->
+        <!--<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>-->
+
+        <!--显示地控制是否应该启用或禁用验证：有两种可能的设置。
+            1.persistence.xml文件中的validation-mode元素,该元素可以设置为三种可能的值：
+                AUTO-当验证提高程序在类路径上存在时，启用验证(默认)；
+                CALLBACK-如果没有可用的验证提供程序，那么启用验证并抛出一个错误：
+                NONE-禁用验证
+            2.javax.persistence.validation.mode持久化属性。此属性可以在传递给createEntityManagerFactory()方法的Map中指定，
+                并且如果存在的话，会重写validation-mode设置。可能的值包括等价的validation-mode值的字符串。-->
+        <validation-mode>AUTO</validation-mode>
+
+        <!--供应商专有属性(可选)-->
         <properties>
+            <property name="javax.persistence.validation.mode" value="auto"/>
             <!--<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>-->
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/D:/tools/h2/database/EmpServDB"/>
