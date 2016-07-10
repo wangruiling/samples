@@ -59,9 +59,10 @@
         <!--供应商专有属性(可选)-->
         <properties>
             <property name="javax.persistence.validation.mode" value="auto"/>
-            <!--<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>-->
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/D:/tools/h2/database/EmpServDB"/>
+            <!--<property name="javax.persistence.jdbc.user" value="app"/>-->
+            <!--<property name="javax.persistence.jdbc.password" value="app"/>-->
             <!-- enable this property to see SQL and other logging -->
             <!-- property name="eclipselink.logging.level" value="FINE"/ -->
 
