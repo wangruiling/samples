@@ -17,12 +17,17 @@ public class Chapter02 {
         Jedis conn = new Jedis("localhost");
         conn.select(15);
 
-        testLoginCookies(conn);
+//        testLoginCookies(conn);
 //        testShopppingCartCookies(conn);
 //        testCacheRows(conn);
-//        testCacheRequest(conn);
+        testCacheRequest(conn);
     }
 
+    /**
+     * 登录和cookie缓存
+     * @param conn
+     * @throws InterruptedException
+     */
     public void testLoginCookies(Jedis conn) throws InterruptedException {
         System.out.println("\n----- testLoginCookies -----");
         String token = UUID.randomUUID().toString();
@@ -55,8 +60,12 @@ public class Chapter02 {
         assert s == 0;
     }
 
-    public void testShopppingCartCookies(Jedis conn) throws InterruptedException
-    {
+    /**
+     * 使用Redis实现购物车
+     * @param conn
+     * @throws InterruptedException
+     */
+    public void testShopppingCartCookies(Jedis conn) throws InterruptedException {
         System.out.println("\n----- testShopppingCartCookies -----");
         String token = UUID.randomUUID().toString();
 
@@ -64,7 +73,7 @@ public class Chapter02 {
         updateToken(conn, token, "username", "itemX");
         System.out.println("And add an item to the shopping cart");
         addToCart(conn, token, "itemY", 3);
-        Map<String,String> r = conn.hgetAll("cart:" + token);
+        Map<String, String> r = conn.hgetAll("cart:" + token);
         System.out.println("Our shopping cart currently has:");
         for (Map.Entry<String,String> entry : r.entrySet()){
             System.out.println("  " + entry.getKey() + ": " + entry.getValue());
@@ -75,7 +84,7 @@ public class Chapter02 {
 
         System.out.println("Let's clean out our sessions and carts");
         CleanFullSessionsThread thread = new CleanFullSessionsThread(0);
-        thread.start();
+//        thread.start();
         Thread.sleep(1000);
         thread.quit();
         Thread.sleep(2000);
@@ -91,9 +100,7 @@ public class Chapter02 {
         assert r.size() == 0;
     }
 
-    public void testCacheRows(Jedis conn)
-        throws InterruptedException
-    {
+    public void testCacheRows(Jedis conn) throws InterruptedException {
         System.out.println("\n----- testCacheRows -----");
         System.out.println("First, let's schedule caching of itemX every 5 seconds");
         scheduleRowCache(conn, "itemX", 5);
@@ -139,6 +146,10 @@ public class Chapter02 {
         }
     }
 
+    /**
+     * 网页缓存
+     * @param conn
+     */
     public void testCacheRequest(Jedis conn) {
         System.out.println("\n----- testCacheRequest -----");
         String token = UUID.randomUUID().toString();
@@ -193,20 +204,30 @@ public class Chapter02 {
 
 //        记录令牌最后一次出现的时间
         conn.zadd("recent:", timestamp, token);
+
         if (item != null) {
 //            记录用户浏览过的商品
             conn.zadd("viewed:" + token, timestamp, item);
 //            移除旧的记录，只保留用户浏览过的25个商品
             conn.zremrangeByRank("viewed:" + token, 0, -26);
-//
+            //被浏览得最多的商品将被放到有序集合的索引0位置上
             conn.zincrby("viewed:", -1, item);
         }
     }
 
+    /**
+     * 更新购物车
+     * @param conn
+     * @param session
+     * @param item
+     * @param count
+     */
     public void addToCart(Jedis conn, String session, String item, int count) {
         if (count <= 0) {
+            //从购物车里面移除指定的商品
             conn.hdel("cart:" + session, item);
         } else {
+            //将指定的商品添加到购物车
             conn.hset("cart:" + session, item, String.valueOf(count));
         }
     }
@@ -267,7 +288,7 @@ public class Chapter02 {
     }
 
     public interface Callback {
-        public String call(String request);
+        String call(String request);
     }
 
     /**
@@ -358,6 +379,7 @@ public class Chapter02 {
                 ArrayList<String> sessionKeys = new ArrayList<String>();
                 for (String sess : sessions) {
                     sessionKeys.add("viewed:" + sess);
+                    //删除旧会话对应用户的购物车
                     sessionKeys.add("cart:" + sess);
                 }
 
