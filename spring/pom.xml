@@ -13,10 +13,10 @@
     <url>http://maven.apache.org</url>
 
     <properties>
-        <springframework.version>4.2.3.RELEASE</springframework.version>
-        <spring-data-commons.version>1.11.1.RELEASE</spring-data-commons.version>
-        <spring-data-jpa.version>1.9.1.RELEASE</spring-data-jpa.version>
-        <hibernate.version>5.0.3.Final</hibernate.version>
+        <springframework.version>4.3.2.RELEASE</springframework.version>
+        <spring-data-commons.version>1.12.2.RELEASE</spring-data-commons.version>
+        <spring-data-jpa.version>1.10.2.RELEASE</spring-data-jpa.version>
+        <hibernate.version>5.2.1.Final</hibernate.version>
         <aspectj.version>1.8.0</aspectj.version>
         <assertj.version>3.0.0</assertj.version>
         <druid.version>1.0.16</druid.version>
