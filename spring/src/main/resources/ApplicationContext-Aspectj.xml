@@ -6,7 +6,7 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!--激活自动代理功能-->
-    <aop:aspectj-autoproxy proxy-target-class="true" expose-proxy="true" />
+    <aop:aspectj-autoproxy />
 
     <!-- 业务逻辑切面配置,配置目标类 -->
     <bean id="helloWorldService" class="org.wrl.spring.AspectJ.HelloworldService"/>
