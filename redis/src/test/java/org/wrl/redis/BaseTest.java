@@ -1,7 +1,7 @@
 package org.wrl.redis;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import redis.clients.jedis.Jedis;
 
 /**
@@ -10,12 +10,12 @@ import redis.clients.jedis.Jedis;
 public abstract class BaseTest {
     protected static Jedis conn;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         conn = new Jedis("localhost");
     }
 
-    @AfterClass
+    @AfterAll
     public static void down() {
         conn.close();
     }
