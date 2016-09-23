@@ -1,7 +1,6 @@
 package org.wrl.redis;
 
 import org.junit.jupiter.api.Test;
-import redis.clients.jedis.Jedis;
 
 /**
  * Redis中的字符串
