@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import java.awt.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 /**
  * @author: wangrl
@@ -15,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class Test5 {
     @Test
-    public void lambdaExpressions() {
+    void lambdaExpressions() {
         // lambda expression for condition
         assertTrue(() -> "".isEmpty(), "string should be empty");
         // lambda expression for assertion message
@@ -27,7 +30,7 @@ public class Test5 {
      * 新增的 assertAll ，可用于检查一组相关调用（Invocation）的结果，并判断断言是否失败，虽然无法短路但可输出所有结果的值
      */
     @Test
-    public void groupedAssertions() {
+    void groupedAssertions() {
         Dimension dim = new Dimension(800, 600);
         assertAll("dimension",
                 () -> assertTrue(dim.getWidth() == 800, "width"),
@@ -35,11 +38,11 @@ public class Test5 {
     }
 
     /**
-     * JUnit 5使用assertThrows和equalsThrows断言
-     * 如果所调用的方法没有指定异常，测试中它们都会失败。为了进一步断言异常的属性（例如消息中包含某些信息），此时还将返回 expectThrows
+     * JUnit 5使用assertThrows和equalsThrows断言,如果所调用的方法没有指定异常，测试中它们都会失败。
+     * expectThrows还会返回抛出的异常实例，以用于后续的验证（例如消息中包含某些信息），比如，断言异常信息包含正确的信息等
      */
     @Test
-    public void exceptions() {
+    void exceptions() {
         // assert exception type
         assertThrows(RuntimeException.class, () -> {
             throw new NullPointerException();
@@ -68,21 +71,45 @@ public class Test5 {
 
 
     @Test
-    @Disabled
-    public void skippedTest() {
+    @Disabled("禁用测试")
+    void skippedTest() {
         // not executed
+        System.out.println("禁用测试");
     }
     @Test
     @Tag("jenkins")
-    public void jenkinsOnly() {
+    void jenkinsOnly() {
         // ...
     }
 
     @Test
-    public void windowsOnly() {
-        Assumptions.assumeTrue(System.getenv("OS").startsWith("Windows"));
+    void windowsOnly() {
+        assumeTrue(System.getenv("OS").startsWith("Windows"));
         // ...
     }
 
+    @Test
+    void exitIfFalseIsTrue() {
+        assumeTrue(false);
+        System.exit(1);
+    }
 
+    /*************** 假言/判定允许你仅在特定条件满足时才运行测试。这个特性能够减少测试组件的运行时间和代码重复，特别是在假言都不满足的情况下********/
+    @Test
+    void exitIfTrueIsFalse() {
+        assumeFalse(this::truism);
+        System.exit(1);
+    }
+
+    private boolean truism() {
+        return true;
+    }
+
+    @Test
+    void exitIfNullEqualsString() {
+        assumingThat(
+                "null".equals(null),
+                () -> System.exit(1)
+        );
+    }
 }
