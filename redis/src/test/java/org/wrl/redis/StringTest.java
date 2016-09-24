@@ -3,7 +3,7 @@ package org.wrl.redis;
 import org.junit.jupiter.api.Test;
 
 /**
- * Redis中的字符串
+ * Redis中的字符串,可以存储字符串、整数或者浮点数
  * Created by wangrl on 2016/9/11.
  */
 public class StringTest extends BaseTest {
