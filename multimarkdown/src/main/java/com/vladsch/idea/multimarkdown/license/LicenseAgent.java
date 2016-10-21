@@ -279,7 +279,7 @@ public class LicenseAgent {
                     this.activation_code = json.getString(ACTIVATION_CODE);
                     return true;
                 } else {
-                    if (LOG_AGENT_INFO) logger.debug("License server did not reply with a valid response");
+                    if (LOG_AGENT_INFO) logger.debug("License server did not reply with a validator response");
                 }
             } else {
                 if (status.equals(STATUS_DISABLE)) {
