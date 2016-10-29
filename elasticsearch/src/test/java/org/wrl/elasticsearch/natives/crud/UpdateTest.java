@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.common.collect.Maps;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.junit.Test;
 import org.wrl.elasticsearch.natives.AbstractApi;
@@ -26,8 +25,8 @@ public class UpdateTest extends AbstractApi {
 		
 		UpdateResponse response = client.prepareUpdate("library", "book", "2")
 				.setFields("title", "_source")
-				.setScript("ctx._source.title = ntitle")
-				.setScriptParams(params)
+//				.setScript("ctx._source.title = ntitle")
+//				.setScriptParams(params)
 				.execute().actionGet();
 		
 		System.out.println("Document: " + response.getIndex() 
