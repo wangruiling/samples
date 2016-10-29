@@ -41,7 +41,7 @@ public class ElasticSearchUtilsTest {
      */
     @Test
     public void query_with_filter() {
-        TransportClient nodeClient = ElasticSearchUtils.getNodeClient();
+        TransportClient nodeClient = ElasticSearchUtils.getTransportClient();
 
         //查询
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
