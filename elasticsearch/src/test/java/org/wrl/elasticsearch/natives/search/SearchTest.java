@@ -11,8 +11,29 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.junit.Test;
 import org.wrl.elasticsearch.natives.AbstractApi;
 
+import java.io.IOException;
+
 
 public class SearchTest extends AbstractApi {
+
+	@Test
+	public void testCount() throws IOException {
+		recreateIndex("library");
+		createSomeBooks("library");
+		Client client = getClient();
+
+		QueryBuilder queryBuilder = QueryBuilders.matchAllQuery();
+
+		System.out.println("Generated query: " + queryBuilder.toString());
+
+		SearchResponse response = client.prepareSearch("library")
+				.setQuery(queryBuilder)
+				.addFields("title", "_source")
+				.setSize(0)
+				.execute().actionGet();
+		showHits(response);
+
+	}
 
 	@Test
 	public void test() {
@@ -32,7 +53,7 @@ public class SearchTest extends AbstractApi {
 				.addFields("title", "_source")
 				.execute().actionGet();
 		showHits(response);
-
+		System.out.println(response.getHits().getTotalHits());
 	}
 	
 	@Test
