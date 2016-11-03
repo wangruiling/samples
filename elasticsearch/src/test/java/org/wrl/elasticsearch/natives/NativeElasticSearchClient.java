@@ -54,11 +54,16 @@ public class NativeElasticSearchClient {
                 .addTransportAddress(new InetSocketTransportAddress(new InetSocketAddress("localhost", 9300) ));
     }
 
+    /**
+     * http://www.cnblogs.com/richaaaard/p/5312314.html
+     * 混合度量（Adding a Metric to the Mix）
+     * 每种颜色汽车的平均价格是多少,这需要将度量嵌套在桶内，度量会基于桶内的文档计算统计结果。
+     * GET /cars/transactions/_search
+     { "size" : 0, "aggs": { "colors": { "terms": { "field": "color" }, "aggs": { "avg_price": { "avg": { "field": "price" } } } } } }
+     * 我们知道有四两红色的车，现在，红色车的平均价格是 $32,500 美元。这个信息可以直接显示在报表或者图形中。
+     * /
     @Test
-    public void testAggregation() {
-        String keyword = "商务";
-        MatchQueryBuilder queryBuilder = QueryBuilders.matchQuery("cnKeywords", keyword).analyzer("ik_smart_syno").operator(MatchQueryBuilder.Operator.AND);
-
+    public void testAggregation2() {
         TermsBuilder termsBuilder =
                 AggregationBuilders.terms("popular_colors").field("color").showTermDocCountError(true);
 
@@ -66,27 +71,108 @@ public class NativeElasticSearchClient {
         termsBuilder.subAggregation(avgAggregation);
 
         SearchRequestBuilder requestBuilder = client.prepareSearch("cars")
-                //.setQuery(queryBuilder)
                 .addAggregation(termsBuilder)
                 .setSize(0);
 
+        System.out.println("---------------- query --------------------");
         System.out.println(requestBuilder.toString());
+        System.out.println("---------------- query --------------------");
 
         SearchResponse response = requestBuilder.execute().actionGet();
 
         Aggregations aggregations = response.getAggregations();
-        System.out.println(response.getHits().getTotalHits());
+        System.out.println("记录总数:" + response.getHits().getTotalHits());
 
         aggregations.asList().stream().filter(aggregation -> aggregation != null).forEach(aggregation -> {
 //            System.out.println(JsonMapper.nonEmptyMapper().toJson(DefaultAggregationMapper.parse(aggregation)));
         });
-        //Map<String, Aggregation> map = aggregations.asMap();
+    }
 
-        //Iterator<Aggregation> iterator = aggregations.iterator();
-        //while (iterator.hasNext()) {
-        //    Aggregation aggregation = iterator.next();
-        //    System.out.println(JsonMapper.nonEmptyMapper().toJson(aggregation));
-        //}
+    /**
+     * 桶中之桶（Buckets Inside Buckets）
+     * 找出每个汽车制造商生产出来汽车颜色的分布
+     * GET /cars/transactions/_search
+     { "size" : 0, "aggs": { "colors": { "terms": { "field": "color" }, "aggs": { "avg_price": { #1 "avg": { "field": "price" } }, "make": { #2 "terms": { "field": "make" #3 } } } } } }
+     *
+     *  响应结果告诉我们以下几点：
+     红色车有四辆。
+     红色车的平均售价是 $32,500 美元。
+     其中三辆是 Honda 本田制造，一辆是 BMW 宝马制造。
+     * /
+    @Test
+    public void testAggregation3() {
+        TermsBuilder termsBuilder =
+                AggregationBuilders.terms("colors").field("color").showTermDocCountError(true);
+
+        AvgBuilder avgAggregation = AggregationBuilders.avg("avg_price").field("price");
+        TermsBuilder makeAggregation = AggregationBuilders.terms("make").field("make").showTermDocCountError(true);
+
+        termsBuilder.subAggregation(avgAggregation);
+        termsBuilder.subAggregation(makeAggregation);
+
+        SearchRequestBuilder requestBuilder = client.prepareSearch("cars")
+                .addAggregation(termsBuilder)
+                .setSize(0);
+
+        System.out.println("---------------- query --------------------");
+        System.out.println(requestBuilder.toString());
+        System.out.println("---------------- query --------------------");
+
+        SearchResponse response = requestBuilder.execute().actionGet();
+
+        Aggregations aggregations = response.getAggregations();
+        System.out.println("记录总数:" + response.getHits().getTotalHits());
+
+        aggregations.asList().stream().filter(aggregation -> aggregation != null).forEach(aggregation -> {
+//            System.out.println(JsonMapper.nonEmptyMapper().toJson(DefaultAggregationMapper.parse(aggregation)));
+        });
+    }
+
+    /**
+     * 桶中之桶（Buckets Inside Buckets）
+     * 为每个汽车生成商计算最低和最高的价格
+     * GET /cars/transactions/_search
+     { "size": 0, "aggs": { "colors": { "terms": { "field": "color" }, "aggs": { "avg_price": { "avg": { "field": "price" }
+     }, "make": { "terms": { "field": "make" }, "aggs": { "min_price": { "min": { "field": "price" } }, "max_price": { "max": { "field": "price" } } } } } } } }
+     *
+     * 有了这两个桶，我们可以对查询的结果进行扩展并得到以下信息：
+     有四辆红色车。
+     红色车的平均售价是 $32,500 美元。
+     其中三辆红色车是 Honda 本田制造，一辆是 BMW 宝马制造。
+     最便宜的红色本田售价为 $10,000 美元。
+     最贵的红色本田售价为 $20,000 美元。
+     */
+    @Test
+    public void testAggregation4() {
+        TermsBuilder termsBuilder =
+                AggregationBuilders.terms("colors").field("color").showTermDocCountError(true);
+
+        AvgBuilder avgAggregation = AggregationBuilders.avg("avg_price").field("price");
+        TermsBuilder makeAggregation = AggregationBuilders.terms("make").field("make").showTermDocCountError(true);
+
+        makeAggregation.subAggregation(AggregationBuilders.min("min_price").field("price"));
+        makeAggregation.subAggregation(AggregationBuilders.max("max_price").field("price"));
+
+
+        termsBuilder.subAggregation(avgAggregation);
+        termsBuilder.subAggregation(makeAggregation);
+
+        SearchRequestBuilder requestBuilder = client.prepareSearch("cars")
+                .addAggregation(termsBuilder)
+                .setSize(0);
+
+        System.out.println("---------------- query --------------------");
+        System.out.println(requestBuilder.toString());
+        System.out.println("---------------- query --------------------");
+
+        SearchResponse response = requestBuilder.execute().actionGet();
+
+        Aggregations aggregations = response.getAggregations();
+        System.out.println("记录总数:" + response.getHits().getTotalHits());
+
+        aggregations.asList().stream().filter(aggregation -> aggregation != null).forEach(aggregation -> {
+//            System.out.println(JsonMapper.nonEmptyMapper().toJson(DefaultAggregationMapper.parse(aggregation)));
+        });
     }
 
     @Test
